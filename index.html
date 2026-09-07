@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Derechos Humanos sin dolor de cabeza</title>
+<style>
+  :root{
+    --paper: #E9E1CD;
+    --card: #F7F2E5;
+    --card-line: #D8CCAA;
+    --ink: #242A33;
+    --ink-soft: #5B6472;
+    --onu: #2C5A7C;
+    --onu-soft: #DCE8ED;
+    --europa: #8C3A2B;
+    --europa-soft: #F1DED4;
+    --gold: #A8802C;
+    --stamp: #B5482E;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(36,42,51,0.05) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height:1.55;
+  }
+  .wrap{max-width:880px; margin:0 auto; padding: 0 20px 100px;}
+  h1,h2,h3{
+    font-family: Georgia, "Iowan Old Style", "Palatino Linotype", "Times New Roman", serif;
+    font-weight: 700;
+    color: var(--ink);
+    line-height:1.15;
+  }
+  p{max-width:70ch;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding: 56px 20px 40px;
+    max-width:880px;
+    margin:0 auto;
+    position:relative;
+  }
+  .hero .stamp{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:96px; height:96px;
+    border-radius:50%;
+    border:3px dashed var(--stamp);
+    color:var(--stamp);
+    font-family: Georgia, serif;
+    font-weight:700;
+    font-size:12px;
+    letter-spacing:0.5px;
+    text-align:center;
+    transform: rotate(-9deg);
+    float:right;
+    margin: 0 4px 12px 20px;
+    line-height:1.2;
+  }
+  .hero h1{
+    font-size: 2.5rem;
+    margin: 0 0 14px;
+    max-width: 14ch;
+  }
+  .hero p.lead{
+    font-size:1.08rem;
+    color:var(--ink-soft);
+    max-width:56ch;
+  }
+  .hero p.lead strong{color:var(--ink);}
+
+  /* ---------- NAV ---------- */
+  nav.tabs{
+    position: sticky; top:0; z-index:50;
+    background: var(--paper);
+    border-bottom:2px solid var(--ink);
+    padding: 10px 20px 0;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  nav.tabs .inner{max-width:840px; margin:0 auto; display:flex; gap:6px;}
+  nav.tabs a{
+    display:inline-block;
+    font-size:0.82rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    text-decoration:none;
+    padding:8px 14px 10px;
+    border:1px solid var(--card-line);
+    border-bottom:none;
+    border-radius:8px 8px 0 0;
+    background:var(--card);
+    transform: translateY(2px);
+  }
+  nav.tabs a:hover{color:var(--ink); background:#fff;}
+
+  section{padding-top:50px;}
+  .eyebrow-free-heading{margin-top:0;}
+  h2.section-title{font-size:1.65rem; margin-bottom:6px;}
+  .section-sub{color:var(--ink-soft); margin-top:0; margin-bottom:26px; max-width:62ch;}
+
+  /* ---------- MAPA / FAMILIAS ---------- */
+  .familias{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+    margin: 20px 0 10px;
+  }
+  .familia{
+    border-radius:10px;
+    padding:20px;
+    border:1px solid var(--card-line);
+  }
+  .familia.onu{background:var(--onu-soft); border-color:#B7CBD6;}
+  .familia.europa{background:var(--europa-soft); border-color:#D9BBAC;}
+  .familia h3{margin:0 0 4px; font-size:1.15rem;}
+  .familia.onu h3{color:var(--onu);}
+  .familia.europa h3{color:var(--europa);}
+  .familia .sede{font-size:0.85rem; color:var(--ink-soft); margin:0 0 12px;}
+  .familia ul{margin:0; padding-left:18px; font-size:0.95rem;}
+  .familia li{margin-bottom:4px;}
+  .conector{
+    text-align:center;
+    font-size:0.85rem;
+    color:var(--ink-soft);
+    margin: 6px 0 24px;
+  }
+
+  /* ---------- TIPOS DE DOCUMENTO ---------- */
+  .tipos{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin: 18px 0 8px;
+  }
+  .tipo{
+    background:var(--card);
+    border:1px solid var(--card-line);
+    border-radius:10px;
+    padding:14px;
+    font-size:0.88rem;
+  }
+  .tipo .nombre{font-weight:700; display:block; margin-bottom:4px;}
+  .tipo .badge{
+    display:inline-block;
+    font-size:0.7rem;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:20px;
+    margin-top:8px;
+  }
+  .badge.obliga{background:#DCEBDD; color:#2E6B37;}
+  .badge.moral{background:#EFE1D6; color:var(--gold);}
+
+  /* ---------- CARDS (documentos y órganos) ---------- */
+  .card{
+    background:var(--card);
+    border:1px solid var(--card-line);
+    border-radius:12px;
+    padding:22px 24px;
+    margin-bottom:20px;
+    position:relative;
+  }
+  .card::before{
+    content:"";
+    position:absolute;
+    left:0; top:14px; bottom:14px;
+    width:4px;
+    border-radius:4px;
+    background:var(--seal, var(--onu));
+  }
+  .card.europa{ --seal: var(--europa); }
+  .card-head{display:flex; align-items:flex-start; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .card h3{margin:0; font-size:1.25rem;}
+  .card .apodo{font-size:0.85rem; color:var(--ink-soft); font-style:italic; margin:2px 0 0;}
+  .en-frase{
+    margin:12px 0 14px;
+    padding:10px 14px;
+    background:#fff;
+    border-left:3px solid var(--gold);
+    border-radius:0 6px 6px 0;
+    font-size:0.95rem;
+  }
+  .en-frase b{color:var(--gold);}
+  .datos-rapidos{
+    display:flex; flex-wrap:wrap; gap:8px 18px;
+    font-size:0.85rem; color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .datos-rapidos span b{color:var(--ink); font-weight:600;}
+
+  details{margin-top:10px;}
+  details summary{
+    cursor:pointer;
+    font-size:0.85rem;
+    font-weight:700;
+    color:var(--onu);
+    list-style:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    padding:6px 0;
+  }
+  .card.europa details summary{color:var(--europa);}
+  details summary::-webkit-details-marker{display:none;}
+  details summary::before{
+    content:"+";
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:18px; height:18px;
+    border-radius:50%;
+    border:1.5px solid currentColor;
+    font-size:13px;
+    transition: transform 0.15s ease;
+  }
+  details[open] summary::before{content:"–";}
+  details .detalle-box{
+    margin-top:8px;
+    padding:14px 16px;
+    background:#fff;
+    border-radius:8px;
+    font-size:0.9rem;
+  }
+  details .detalle-box ul{margin:0; padding-left:18px;}
+  details .detalle-box li{margin-bottom:6px;}
+
+  /* ---------- TIMELINE PROTOCOLOS ---------- */
+  .timeline{border-left:2px solid var(--europa); margin:20px 0 10px 10px; padding-left:22px;}
+  .titem{position:relative; margin-bottom:20px;}
+  .titem::before{
+    content:"";
+    position:absolute; left:-28px; top:4px;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--europa);
+    border:2px solid var(--card);
+  }
+  .titem .tyear{font-weight:700; color:var(--europa); font-size:0.85rem;}
+  .titem p{margin:3px 0 0; font-size:0.92rem;}
+
+  /* ---------- TABLA CHULETA ---------- */
+  .tabla-wrap{overflow-x:auto; margin: 16px 0 10px;}
+  table.chuleta{
+    width:100%;
+    border-collapse:collapse;
+    font-size:0.85rem;
+    min-width:680px;
+    background:var(--card);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  table.chuleta th, table.chuleta td{
+    text-align:left;
+    padding:10px 12px;
+    border-bottom:1px solid var(--card-line);
+    vertical-align:top;
+  }
+  table.chuleta th{
+    background:var(--ink);
+    color:var(--paper);
+    font-weight:600;
+    font-size:0.78rem;
+  }
+  table.chuleta tr:last-child td{border-bottom:none;}
+  table.chuleta td.doc{font-weight:700;}
+
+  /* ---------- TRUCOS ---------- */
+  .trucos{
+    background:var(--card);
+    border:1px solid var(--card-line);
+    border-radius:12px;
+    padding:22px 24px;
+  }
+  .trucos ul{padding-left:20px; margin:0;}
+  .trucos li{margin-bottom:12px; font-size:0.95rem;}
+  .trucos li b{color:var(--gold);}
+
+  footer{
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:0.8rem;
+    margin-top:60px;
+  }
+
+  @media (max-width:640px){
+    .familias{grid-template-columns:1fr;}
+    .tipos{grid-template-columns:1fr 1fr;}
+    .hero .stamp{float:none; display:flex; margin:0 0 16px;}
+    .hero h1{max-width:none; font-size:2rem;}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="stamp">SIN<br>LÍOS</div>
+  <h1>Derechos Humanos, explicados sin dolor de cabeza</h1>
+  <p class="lead">Esa página te parece un ladrillo porque en realidad son <strong>7 documentos distintos y 6 organismos</strong> mezclados en un solo párrafo. Aquí están separados en fichas, con la fecha, el sitio y la idea clave de cada uno, y con lo que puedes saltarte a la primera lectura marcado aparte.</p>
+</header>
+
+<nav class="tabs">
+  <div class="inner">
+    <a href="#mapa">El mapa</a>
+    <a href="#tipos">Tipos de documento</a>
+    <a href="#dudh">DUDH</a>
+    <a href="#cedh">CEDH</a>
+    <a href="#organos-onu">Órganos ONU</a>
+    <a href="#organos-europa">Órganos Europa</a>
+    <a href="#protocolos">Protocolos</a>
+    <a href="#pactos">Los Pactos</a>
+    <a href="#carta-social">Carta Social</a>
+    <a href="#chuleta">Chuleta final</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- MAPA -->
+  <section id="mapa">
+    <h2 class="section-title">1. El mapa general, antes de nada</h2>
+    <p class="section-sub">Todo lo de la página pertenece a una de estas dos "familias". Si sabes de qué familia es un documento, ya sabes casi todo lo importante sobre él.</p>
+
+    <div class="familias">
+      <div class="familia onu">
+        <h3>Familia ONU</h3>
+        <p class="sede">Vale para todo el mundo · sede en Ginebra / Nueva York</p>
+        <ul>
+          <li>DUDH (la declaración, 1948)</li>
+          <li>PIDCP (Pacto de derechos civiles)</li>
+          <li>PIDESC (Pacto de derechos económicos)</li>
+        </ul>
+      </div>
+      <div class="familia europa">
+        <h3>Familia Europea</h3>
+        <p class="sede">Solo países del Consejo de Europa · sede en Estrasburgo</p>
+        <ul>
+          <li>CEDH (el convenio, 1950)</li>
+          <li>Carta Social Europea</li>
+        </ul>
+      </div>
+    </div>
+    <p class="conector">Fíjate: la familia europea es casi un "calco" de la familia ONU, pero solo para Europa. Por eso el texto dice todo el rato que un documento "equivale" a otro.</p>
+  </section>
+
+  <!-- TIPOS DE DOCUMENTO -->
+  <section id="tipos">
+    <h2 class="section-title">2. Cuatro nombres, cuatro "personalidades"</h2>
+    <p class="section-sub">Declaración, Convenio, Pacto y Carta no son sinónimos. Cada palabra te dice si el documento obliga legalmente o no.</p>
+    <div class="tipos">
+      <div class="tipo">
+        <span class="nombre">Declaración</span>
+        Una promesa moral. Nadie te puede llevar a juicio solo por incumplirla.
+        <span class="badge moral">No obliga</span>
+      </div>
+      <div class="tipo">
+        <span class="nombre">Convenio</span>
+        Un contrato firmado entre países, con su propio tribunal.
+        <span class="badge obliga">Sí obliga</span>
+      </div>
+      <div class="tipo">
+        <span class="nombre">Pacto</span>
+        Como el convenio, pero a nivel mundial (ONU).
+        <span class="badge obliga">Sí obliga</span>
+      </div>
+      <div class="tipo">
+        <span class="nombre">Carta</span>
+        Como un pacto, pero centrada en Europa y en derechos sociales.
+        <span class="badge obliga">Sí obliga</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DUDH -->
+  <section id="dudh">
+    <h2 class="section-title">3. La Declaración Universal (DUDH)</h2>
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>Declaración Universal de los Derechos Humanos</h3>
+          <p class="apodo">El "documento fundador", 1948</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> es la lista original de derechos que todo el mundo debería tener, pero es solo una promesa, no un contrato.</div>
+      <div class="datos-rapidos">
+        <span><b>Fecha:</b> 10/12/1948</span>
+        <span><b>Dónde:</b> París (Palacio de Chaillot)</span>
+        <span><b>Quién:</b> Asamblea General de la ONU</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Aprobada bajo la Resolución 217 A (III).</li>
+            <li>Contiene 1 preámbulo y 30 artículos.</li>
+            <li>No tiene obligación jurídica: solo carácter moral. Es decir, ningún país puede ser sancionado legalmente solo por no cumplirla, aunque marca el estándar que luego copian los documentos que sí obligan (CEDH, PIDCP, PIDESC).</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CEDH -->
+  <section id="cedh">
+    <h2 class="section-title">4. El Convenio Europeo (CEDH)</h2>
+    <div class="card europa">
+      <div class="card-head">
+        <div>
+          <h3>Convenio Europeo de Derechos Humanos</h3>
+          <p class="apodo">La versión europea que sí obliga, 1950</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> es el "hermano europeo" de la DUDH, pero convertido en contrato firmado, con su propio tribunal para denunciar a un país.</div>
+      <div class="datos-rapidos">
+        <span><b>Firma:</b> 04/11/1950, Roma</span>
+        <span><b>Vigor:</b> 03/09/1953</span>
+        <span><b>España:</b> firma 24/11/1977, vigor 04/10/1979</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Contiene 1 preámbulo y 59 artículos, repartidos en 3 títulos: Derechos y Libertades (arts. 2–18), el TEDH, y Disposiciones diversas.</li>
+            <li>Tiene 16 protocolos adicionales que lo amplían (ver sección de protocolos más abajo).</li>
+            <li>Equivale al PIDCP: hacen lo mismo, uno a nivel europeo y otro a nivel mundial.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ORGANOS ONU -->
+  <section id="organos-onu">
+    <h2 class="section-title">5. Quién vigila esto en la ONU</h2>
+    <p class="section-sub">Dos organismos generales de la ONU, que no son "de" ningún tratado en concreto, sino que supervisan los derechos humanos en general.</p>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>Consejo de Derechos Humanos</h3>
+          <p class="apodo">El "parlamento" mundial de los DDHH · desde 2006</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> un foro político con 47 países que se turnan para debatir, vigilar y hacer recomendaciones sobre derechos humanos.</div>
+      <div class="datos-rapidos">
+        <span><b>Creado:</b> 15/03/2006</span>
+        <span><b>Sede:</b> Ginebra</span>
+        <span><b>Miembros:</b> 47 países</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Sustituyó a la antigua Comisión de Derechos Humanos.</li>
+            <li>Función: promocionar y proteger los DDHH, y hacer recomendaciones.</li>
+            <li>Se reúne al menos 3 veces al año, 10 semanas en total (una de esas sesiones es la "principal").</li>
+            <li>47 miembros elegidos por 3 años, reelegibles una sola vez, repartidos por zonas: 13 África, 13 Asia-Pacífico, 7 Europa Occidental y otros, 6 Europa Oriental, 8 América Latina y Caribe.</li>
+            <li>Principios que sigue: universalidad, imparcialidad, objetividad, no selectividad y diálogo cooperativo.</li>
+            <li>La mesa (quien lo dirige) tiene 1 presidente y 4 vicepresidentes, elegidos cada año.</li>
+            <li>Creó el Mecanismo de Examen Periódico Universal (revisa a cada país por turnos) y un sistema de denuncias.</li>
+            <li>Tiene un Comité Asesor de 18 expertos, que funciona como su "think tank" o equipo de ideas.</li>
+            <li>Presenta un informe anual a la Asamblea General de la ONU.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>ACNUDH</h3>
+          <p class="apodo">Alto Comisionado de la ONU para los DDHH · desde 1993</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> es la "oficina" de derechos humanos de la ONU, dirigida por el máximo responsable de este tema en toda la organización.</div>
+      <div class="datos-rapidos">
+        <span><b>Creado:</b> 20/12/1993</span>
+        <span><b>Sede:</b> Ginebra (Palais Wilson)</span>
+        <span><b>Titular actual:</b> Volker Türk</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Forma parte de la Secretaría de la ONU (no es un órgano aparte, sino un departamento).</li>
+            <li>Sede en Ginebra, con una oficina también en Nueva York.</li>
+            <li>Su titular tiene rango de Secretario General Adjunto: es la persona con más peso en derechos humanos de toda la ONU.</li>
+            <li>Mandato de 4 años, renovable.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ORGANOS EUROPA -->
+  <section id="organos-europa">
+    <h2 class="section-title">6. Quién vigila el Convenio Europeo</h2>
+    <p class="section-sub">Estos dos organismos existen específicamente para controlar que se cumpla el CEDH.</p>
+
+    <div class="card europa">
+      <div class="card-head">
+        <div>
+          <h3>TEDH — Tribunal Europeo de Derechos Humanos</h3>
+          <p class="apodo">El "tribunal de Estrasburgo"</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> es el tribunal donde puedes denunciar a un país europeo si crees que ha violado tus derechos del CEDH.</div>
+      <div class="datos-rapidos">
+        <span><b>Sede:</b> Estrasburgo</span>
+        <span><b>Jueces:</b> 46 (uno por país firmante)</span>
+        <span><b>Plazo para demandar:</b> 4 meses</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Tantos jueces como Altas Partes Contratantes: 46, con mandato de 9 años no renovable, y deben tener menos de 65 años.</li>
+            <li>El tribunal en pleno elige a su presidente y a 1 o 2 vicepresidentes, por 3 años renovables.</li>
+            <li>Se organiza de menor a mayor formación: Juez único → Comités (3 jueces) → Salas (7 jueces) → Gran Sala (17 jueces). Cuanto más grave o importante el caso, más jueces lo ven.</li>
+            <li>Tiene una secretaría permanente.</li>
+            <li>Las demandas deben presentarse como máximo 4 meses después de la última decisión interna del país.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <div class="card europa">
+      <div class="card-head">
+        <div>
+          <h3>Comisario Europeo de Derechos Humanos</h3>
+          <p class="apodo">El "inspector" independiente · desde 1999</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> una sola persona, independiente, que visita países y vigila cómo van los derechos humanos, sin ser un tribunal.</div>
+      <div class="datos-rapidos">
+        <span><b>Creado:</b> 1999</span>
+        <span><b>Sede:</b> Estrasburgo</span>
+        <span><b>Titular actual:</b> Michael O'Flaherty</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Institución independiente dentro del Consejo de Europa, que realiza visitas a todos los Estados Miembros.</li>
+            <li>Elegido por la Asamblea Parlamentaria del Consejo de Europa, a partir de una lista de 3 candidatos.</li>
+            <li>Mandato de 6 años, no renovable.</li>
+            <li>Presenta un informe anual a la Asamblea Parlamentaria del Consejo de Europa y al Comité de Ministros.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- PROTOCOLOS -->
+  <section id="protocolos">
+    <h2 class="section-title">7. Los protocolos del CEDH, en 4 fechas</h2>
+    <p class="section-sub">El CEDH tiene 16 protocolos en total (15 están en vigor). No hace falta memorizarlos todos: con estos 4 se entiende la evolución.</p>
+    <div class="timeline">
+      <div class="titem">
+        <div class="tyear">Protocolo nº 6 · 1983</div>
+        <p>Suprime la pena de muerte, salvo en tiempos de guerra.</p>
+      </div>
+      <div class="titem">
+        <div class="tyear">Protocolo nº 12 · 2000</div>
+        <p>Introduce una prohibición general de la discriminación (antes solo se prohibía dentro de los derechos ya recogidos).</p>
+      </div>
+      <div class="titem">
+        <div class="tyear">Protocolo nº 13 · 2002</div>
+        <p>Da el paso final: veta la pena de muerte en todas las circunstancias, sin excepción de guerra.</p>
+      </div>
+      <div class="titem">
+        <div class="tyear">Protocolo nº 15 · 2013 (en vigor desde 2021)</div>
+        <p>Refuerza la "subsidiariedad": prioriza que decidan primero los tribunales de cada país, antes de llegar a Estrasburgo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PACTOS -->
+  <section id="pactos">
+    <h2 class="section-title">8. La Carta Internacional: los dos Pactos</h2>
+    <p class="section-sub">Son la versión mundial y obligatoria de la DUDH, divididos en dos: uno para derechos "políticos" (los que ejerces tú directamente) y otro para derechos "sociales" (los que dependen de que el Estado te los proporcione).</p>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>PIDCP</h3>
+          <p class="apodo">Pacto de Derechos Civiles y Políticos</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> el "hermano mundial" del CEDH — libertad de expresión, voto, juicio justo, etc.</div>
+      <div class="datos-rapidos">
+        <span><b>Firma:</b> 16/12/1966, Nueva York</span>
+        <span><b>Vigor:</b> 23/03/1976</span>
+        <span><b>España:</b> vigor 27/07/1977</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>En España: firma 28/09/1976, ratificación 27/04/1977, entrada en vigor 27/07/1977.</li>
+            <li>Contiene 53 artículos, más el Protocolo 1 (16/12/1966) y el Protocolo 2 (15/12/1989).</li>
+            <li>Órgano de control: el <b>Comité de Derechos Humanos (CCPR)</b>, con sede en Ginebra (aunque las reuniones de marzo se hacen en Nueva York).</li>
+            <li>Compuesto por 18 expertos, uno por país como máximo, con un quórum de 12 para poder reunirse.</li>
+            <li>Su mesa: 1 presidente, 3 vicepresidentes y 1 relator, más 4 relatores especiales y 2 adjuntos.</li>
+            <li>Mandato de los expertos: 4 años, reelegible. Mandato de la mesa: 2 años.</li>
+            <li>Se reúnen en 3 periodos de sesiones al año, de 3 semanas cada uno.</li>
+            <li>Cada año los países presentan un informe, y el Comité se reúne una vez al año, recibe denuncias, y emite "observaciones finales" (dirigidas a un país concreto) y "observaciones generales" (interpretaciones generales de un derecho).</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <h3>PIDESC</h3>
+          <p class="apodo">Pacto de Derechos Económicos, Sociales y Culturales</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> el "hermano mundial" de la Carta Social Europea — trabajo, educación, salud, vivienda, etc.</div>
+      <div class="datos-rapidos">
+        <span><b>Firma:</b> 16/12/1966, Nueva York</span>
+        <span><b>Vigor:</b> 03/01/1976</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Contiene 31 artículos, más un Protocolo del 10/12/2008.</li>
+            <li>Órgano de control: el <b>Comité DESC (CESCR)</b>, creado por el ECOSOC, con sede en Ginebra.</li>
+            <li>Compuesto por 18 expertos.</li>
+            <li>Su mesa: 1 presidente, 3 vicepresidentes (4 en total en el CESCR, uno de ellos hace de relator) y 1 relator.</li>
+            <li>Mandato de los expertos: 4 años, reelegible. Mandato de la mesa: 2 años.</li>
+            <li>Se reúnen 2 veces al año, en 2 periodos de sesiones de 3 semanas cada uno.</li>
+            <li>Los países presentan informe cada 5 años (si es un país nuevo en el pacto, a los 2 años de adherirse).</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CARTA SOCIAL -->
+  <section id="carta-social">
+    <h2 class="section-title">9. La Carta Social Europea</h2>
+    <div class="card europa">
+      <div class="card-head">
+        <div>
+          <h3>Carta Social Europea</h3>
+          <p class="apodo">También llamada "Carta de Turín" · 1961</p>
+        </div>
+      </div>
+      <div class="en-frase"><b>En una frase:</b> es el "hermano europeo" del PIDESC — derechos sociales y laborales, a nivel europeo.</div>
+      <div class="datos-rapidos">
+        <span><b>Firma:</b> 18/10/1961, Turín</span>
+        <span><b>Vigor:</b> 26/02/1965</span>
+        <span><b>España:</b> firma 27/04/1978, vigor 05/06/1980</span>
+      </div>
+      <details>
+        <summary>Ver todos los datos</summary>
+        <div class="detalle-box">
+          <ul>
+            <li>Contiene 38 artículos, divididos en 5 partes, más un anexo.</li>
+            <li>Equivale al PIDESC: mismo tipo de derechos, a escala europea.</li>
+            <li>Existe una versión revisada, firmada en Estrasburgo el 3 de mayo de 1996 (España la firmó el 23/10/2000 y la ratificó el 17/05/2021, casi 21 años después).</li>
+            <li>Órgano de control: el <b>Comité Europeo de Derechos Sociales (CEDS)</b>, con sede en Estrasburgo.</li>
+            <li>Compuesto por 15 miembros independientes, elegidos por el Comité de Ministros del Consejo de Europa (ojo: son 15, no 18 como los comités de la ONU).</li>
+            <li>Su mesa: 1 presidente, 1 o varios vicepresidentes y 1 relator.</li>
+            <li>Mandato de los miembros: 6 años, renovable una vez. Mandato de la mesa: 2 años.</li>
+            <li>Sus decisiones se llaman "conclusiones" (no sentencias).</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- CHULETA FINAL -->
+  <section id="chuleta">
+    <h2 class="section-title">10. La chuleta: todo en una tabla</h2>
+    <p class="section-sub">Para repasar en 2 minutos antes de un examen.</p>
+
+    <div class="tabla-wrap">
+      <table class="chuleta">
+        <thead>
+          <tr>
+            <th>Documento</th>
+            <th>Firma</th>
+            <th>Vigor</th>
+            <th>Artículos</th>
+            <th>¿Obliga?</th>
+            <th>Órgano de control</th>
+            <th>Equivale a</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="doc">DUDH</td>
+            <td>10/12/1948</td>
+            <td>— (no aplica)</td>
+            <td>30</td>
+            <td>No, es moral</td>
+            <td>Ninguno</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td class="doc">CEDH</td>
+            <td>04/11/1950</td>
+            <td>03/09/1953</td>
+            <td>59</td>
+            <td>Sí</td>
+            <td>TEDH</td>
+            <td>PIDCP</td>
+          </tr>
+          <tr>
+            <td class="doc">PIDCP</td>
+            <td>16/12/1966</td>
+            <td>23/03/1976</td>
+            <td>53</td>
+            <td>Sí</td>
+            <td>Comité DDHH (CCPR)</td>
+            <td>CEDH</td>
+          </tr>
+          <tr>
+            <td class="doc">PIDESC</td>
+            <td>16/12/1966</td>
+            <td>03/01/1976</td>
+            <td>31</td>
+            <td>Sí</td>
+            <td>Comité DESC (CESCR)</td>
+            <td>Carta Social Europea</td>
+          </tr>
+          <tr>
+            <td class="doc">Carta Social Europea</td>
+            <td>18/10/1961</td>
+            <td>26/02/1965</td>
+            <td>38</td>
+            <td>Sí</td>
+            <td>CEDS</td>
+            <td>PIDESC</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <br>
+
+    <div class="trucos">
+      <h3 style="margin-top:0;">Trucos para no liarte</h3>
+      <ul>
+        <li><b>Piensa en parejas.</b> CEDH↔PIDCP (derechos civiles y políticos) y Carta Social Europea↔PIDESC (derechos económicos y sociales). Si sabes uno de cada pareja, el otro es "el mismo pero a otra escala".</li>
+        <li><b>Casi todos los comités de la ONU tienen 18 expertos</b> y mandato de 4 años (CCPR, CESCR, y el Comité Asesor del Consejo de DDHH). Es casi un número mágico.</li>
+        <li><b>El comité europeo, CEDS, es "el raro":</b> solo 15 miembros y mandato de 6 años, como el Comisario Europeo. En Europa, 6 años es lo habitual para cargos individuales o comités.</li>
+        <li><b>Fechas ancla:</b> 1948 (DUDH) → 1950 (CEDH) → 1961 (Carta Social) → 1966 (los dos Pactos, el mismo día: 16 de diciembre).</li>
+        <li><b>Sedes:</b> lo de la ONU casi siempre en Ginebra; lo europeo casi siempre en Estrasburgo. Las excepciones son donde se firmó cada documento: París (DUDH), Roma (CEDH), Turín (Carta Social) y Nueva York (los Pactos).</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>Hecho para repasar rápido — toca "Ver todos los datos" en cada ficha solo cuando quieras memorizar los detalles finos.</footer>
+</div>
+
+</body>
+</html>
