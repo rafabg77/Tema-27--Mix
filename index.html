@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#3a2818">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="El Corcho">
+<meta name="format-detection" content="telephone=no">
+<title>El Corcho — Repaso CNP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&amp;family=Oswald:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --cork-1:#4a3423; --cork-2:#3a2818; --cork-edge:#2a1c10;
+  --frame:#241a10; --brass:#c9a15a;
+  --ink:#241f1a; --paper-shadow: rgba(0,0,0,.45);
+  --A:#f6c453; --A-t:#3a2c00;
+  --B:#e5573f; --B-t:#3a0d05;
+  --C:#7fc383; --C-t:#0d2b0f;
+  --D:#f2a35c; --D-t:#3a1f00;
+  --E:#5aa9e6; --E-t:#04203a;
+  --F:#a97fe0; --F-t:#25073a;
+  --G:#3fb8af; --G-t:#00302c;
+  --H:#5b78ea; --H-t:#0a1440;
+  --I:#f2a6c1; --I-t:#40071e;
+  --J:#a3c65a; --J-t:#1c2900;
+  --K:#a7b0ba; --K-t:#1a1f24;
+  --L:#cdbfa5; --L-t:#2b2010;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  color-scheme: dark light;
+}
+*{box-sizing:border-box;}
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+html,body{margin:0;padding:0;}
+html.scroll-locked, html.scroll-locked body{overflow:hidden; height:100%;}
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.03), transparent 40%),
+    radial-gradient(ellipse at 80% 90%, rgba(255,255,255,.02), transparent 40%),
+    repeating-radial-gradient(circle at 0 0, rgba(0,0,0,.08) 0, rgba(0,0,0,.08) 1px, transparent 1px, transparent 3px),
+    linear-gradient(160deg, var(--cork-1), var(--cork-2));
+  color:#f1e9db;
+  min-height:100vh;
+  min-height:100dvh;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  overscroll-behavior-y:none;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+/* Elimina el destello gris/azul al pulsar en todo el interfaz, sin afectar
+   la selección de texto de las notas (eso se controla aparte, por elemento). */
+a,button,input,textarea,select,.chip,.postit,.pin{
+  -webkit-tap-highlight-color:transparent;
+}
+/* wooden frame border feel */
+.board-frame{
+  border:14px solid var(--frame);
+  border-image: linear-gradient(135deg,#3a2a1a,#1c130b,#3a2a1a) 1;
+  min-height:100vh;
+  min-height:100dvh;
+  padding-top:var(--sat);
+  padding-bottom:var(--sab);
+  padding-left:var(--sal);
+  padding-right:var(--sar);
+}
+
+header{
+  padding:28px 5vw 18px;
+  text-align:center;
+  position:relative;
+}
+header::after{
+  content:"";
+  display:block;
+  width:120px; height:3px; margin:14px auto 0;
+  background:var(--brass);
+  opacity:.6;
+}
+h1{
+  font-family:'Oswald',sans-serif;
+  font-weight:700;
+  font-size:clamp(2.1rem,5vw,3.4rem);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  margin:0;
+  color:#f6ead2;
+  text-shadow: 0 2px 0 rgba(0,0,0,.5);
+}
+h1 span{color:var(--brass);}
+.subtitle{
+  font-family:'Oswald',sans-serif;
+  font-weight:400;
+  letter-spacing:.15em;
+  text-transform:uppercase;
+  font-size:.78rem;
+  color:#c9b998;
+  margin-top:6px;
+}
+.stats{
+  font-family:'Inter',sans-serif;
+  font-size:.78rem;
+  color:#c2ad8c;
+  margin-top:10px;
+}
+.stats b{color:#f1e9db;}
+
+.controls{
+  max-width:1100px;
+  margin:0 auto 8px;
+  padding:0 5vw;
+}
+.searchbar{
+  display:flex; gap:10px; align-items:center;
+  background:rgba(0,0,0,.28);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:10px 10px 10px 14px;
+  margin-bottom:14px;
+}
+.searchbar input{
+  flex:1; background:none; border:none; outline:none;
+  color:#f1e9db; font-family:'Inter',sans-serif; font-size:.95rem;
+  min-width:0;
+}
+.searchbar input::placeholder{color:#8a7c66;}
+.searchbar svg{flex:none; opacity:.6;}
+.search-clear{
+  flex:none; appearance:none; -webkit-appearance:none;
+  background:rgba(255,255,255,.08); border:none; border-radius:50%;
+  width:30px; height:30px; min-width:30px;
+  display:flex; align-items:center; justify-content:center;
+  color:#d8cbb2; font-size:.85rem; line-height:1; cursor:pointer;
+  touch-action:manipulation; -webkit-tap-highlight-color:transparent;
+}
+.search-clear:active{background:rgba(255,255,255,.18);}
+.search-clear[hidden]{display:none;}
+
+.chips{
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin-bottom:6px;
+}
+.chip{
+  font:inherit;
+  font-family:'Oswald',sans-serif;
+  font-size:.72rem;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  padding:7px 13px;
+  min-height:44px;
+  margin:0;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.04);
+  color:#d8cbb2;
+  cursor:pointer;
+  appearance:none; -webkit-appearance:none;
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  touch-action:manipulation;
+  transition:transform .12s ease, box-shadow .12s ease;
+  display:flex; align-items:center; gap:7px;
+}
+.chip .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+.chip.active{
+  background:var(--c,#666); color:var(--ct,#111);
+  border-color:transparent;
+  box-shadow:0 2px 8px rgba(0,0,0,.35);
+}
+@media (hover:hover) and (pointer:fine){
+  .chip:hover{transform:translateY(-1px); will-change:transform;}
+}
+.chip-all{margin-right:4px;}
+
+/* Foco visible por teclado, consistente en toda la interfaz (no afecta al tacto/ratón) */
+:where(button,.chip,.postit,input,textarea,select,a):focus-visible{
+  outline:2px solid var(--brass);
+  outline-offset:2px;
+  border-radius:4px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; scroll-behavior:auto !important; }
+}
+
+.review-launch{
+  display:flex; justify-content:flex-end; gap:10px; margin-bottom:14px; flex-wrap:wrap;
+}
+.review-btn{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.82rem;
+  letter-spacing:.05em; text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+  padding:11px 20px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  background:var(--brass); color:#241a10;
+  box-shadow:0 3px 10px rgba(0,0,0,.4);
+  transition:transform .12s ease, box-shadow .12s ease;
+  touch-action:manipulation; user-select:none; -webkit-user-select:none;
+}
+@media (hover:hover) and (pointer:fine){
+  .review-btn:hover{transform:translateY(-1px); box-shadow:0 5px 14px rgba(0,0,0,.5);}
+}
+.review-btn.secondary{background:rgba(255,255,255,.08); color:#f1e9db; border:1px solid rgba(255,255,255,.18);}
+.review-btn.save-btn{background:#3fb8af; color:#00302c; display:none;}
+.review-btn.save-btn.dirty{display:flex;}
+.review-btn.save-btn .dot{
+  width:8px; height:8px; border-radius:50%; background:#e5573f;
+}
+
+.board{
+  max-width:1400px;
+  margin:0 auto;
+  padding:18px 5vw 60px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:26px 22px;
+}
+.postit{
+  position:relative;
+  background: var(--c);
+  color: var(--ct);
+  padding:20px 16px 16px;
+  min-height:150px;
+  box-shadow: 3px 6px 14px var(--paper-shadow), 0 1px 0 rgba(255,255,255,.25) inset;
+  cursor:pointer;
+  transform:rotate(var(--rot,0deg));
+  transition:transform .15s ease, box-shadow .15s ease, z-index 0s;
+  font-family:'Kalam',cursive;
+  display:flex; flex-direction:column;
+  touch-action:manipulation;
+  user-select:none; -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  content-visibility:auto;
+  contain:layout style paint;
+  contain-intrinsic-size:auto 260px;
+}
+@media (hover:hover) and (pointer:fine){
+  .postit:hover{
+    transform:rotate(0deg) scale(1.045) translateZ(0);
+    box-shadow: 4px 10px 22px rgba(0,0,0,.55), 0 1px 0 rgba(255,255,255,.3) inset;
+    z-index:5;
+    will-change:transform,box-shadow;
+  }
+}
+.postit:active{
+  transform:rotate(0deg) scale(.98);
+}
+.postit::before{ /* torn/curled corner */
+  content:"";
+  position:absolute; right:0; bottom:0;
+  width:22px; height:22px;
+  background:linear-gradient(135deg, transparent 50%, rgba(0,0,0,.18) 50%);
+}
+.pin{
+  position:absolute; top:-9px; left:50%; transform:translateX(-50%);
+  width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #ff8a80, #b3261e 70%);
+  box-shadow:0 3px 4px rgba(0,0,0,.5);
+}
+.pit-head{
+  display:flex; justify-content:space-between; align-items:flex-start;
+  font-family:'Oswald',sans-serif;
+  font-size:.66rem; letter-spacing:.05em; text-transform:uppercase;
+  opacity:.75; margin-bottom:8px;
+}
+.pit-title{
+  font-weight:700; font-size:1.18rem; line-height:1.18;
+  margin-bottom:8px;
+}
+.pit-snippet{
+  font-size:.98rem; line-height:1.32; opacity:.9;
+  overflow:hidden; display:-webkit-box; -webkit-line-clamp:5; -webkit-box-orient:vertical;
+  flex:1;
+}
+.pit-cat{
+  margin-top:10px; font-family:'Oswald',sans-serif; font-size:.62rem;
+  letter-spacing:.06em; text-transform:uppercase; opacity:.7;
+}
+.mastered-badge{
+  position:absolute; top:8px; right:10px;
+  width:22px; height:22px; border-radius:50%;
+  background:#2e7d32; color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.8rem; font-family:'Inter',sans-serif; font-weight:700;
+  box-shadow:0 2px 5px rgba(0,0,0,.4);
+}
+
+.empty-msg{
+  grid-column:1/-1; text-align:center; padding:50px 10px;
+  font-family:'Oswald',sans-serif; letter-spacing:.06em; text-transform:uppercase;
+  color:#a9977a; font-size:.9rem;
+}
+
+/* modal */
+.overlay{
+  position:fixed; inset:0; background:rgba(10,6,3,.72);
+  display:none; align-items:center; justify-content:center;
+  padding:24px; z-index:50;
+}
+.overlay.open{display:flex;}
+.modal{
+  width:min(640px, 100%);
+  max-height:86vh; max-height:86dvh; overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  background: var(--c);
+  color:var(--ct);
+  padding:34px 30px 28px;
+  position:relative;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  font-family:'Kalam',cursive;
+}
+.modal .pin{top:-10px;}
+.modal-handle{display:none;}
+.modal-close{
+  position:absolute; top:14px; right:16px;
+  width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-size:1.3rem;
+  background:none; border:none; color:inherit; opacity:.6; cursor:pointer;
+  touch-action:manipulation;
+}
+.modal-close:hover{opacity:1;}
+.modal-head{
+  font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:.06em;
+  text-transform:uppercase; opacity:.75; margin-bottom:10px;
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+.modal-title{font-weight:700; font-size:1.55rem; margin-bottom:14px; line-height:1.2;}
+.modal-body{font-size:1.15rem; line-height:1.55;}
+.modal-body .ind1{margin-left:20px; display:block;}
+.modal-body .ind2{margin-left:40px; display:block;}
+.modal-body b{font-weight:700;}
+.modal-body .orig-note{
+  margin-top:16px; padding-top:12px; border-top:2px dashed rgba(0,0,0,.25);
+  font-family:'Inter',sans-serif; font-size:.8rem; opacity:.75;
+}
+.tagpill{
+  display:inline-block; padding:2px 9px; border-radius:10px;
+  background:rgba(0,0,0,.15);
+}
+
+footer{
+  text-align:center; padding:20px 5vw 40px;
+  font-family:'Inter',sans-serif; font-size:.75rem; color:#8a7c66;
+}
+@media (max-width:520px){
+  .board{grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:20px 14px;}
+
+  /* El modal de nota se convierte en una hoja que sube desde abajo,
+     el gesto natural en móvil, con un tirador para cerrarla deslizando. */
+  .overlay{align-items:flex-end; padding:0;}
+  .modal{
+    width:100%; max-height:92dvh;
+    border-radius:18px 18px 0 0;
+    padding:26px 20px calc(24px + var(--sab));
+  }
+  .modal-handle{
+    display:block; position:absolute; top:9px; left:50%; transform:translateX(-50%);
+    width:40px; height:5px; border-radius:3px; background:rgba(0,0,0,.28);
+  }
+  .modal-close{top:20px;}
+
+  /* Categorías: tira horizontal con scroll-snap en vez de envolver en
+     varias filas y empujar el tablero hacia abajo. */
+  .chips{
+    flex-wrap:nowrap; overflow-x:auto; scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain;
+    margin-left:-5vw; margin-right:-5vw; padding:0 5vw 6px;
+    -ms-overflow-style:none; scrollbar-width:none;
+  }
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{flex:none; scroll-snap-align:start;}
+
+  /* Barra de acciones anclada abajo, al alcance del pulgar.
+     Fondo sólido (degradado, sin blur): backdrop-filter obligaría al
+     navegador a difuminar el tablero en cada fotograma de scroll, que era
+     la causa principal de los cortes/lag en móvil. */
+  .review-launch{
+    position:fixed; left:0; right:0; bottom:0; z-index:40;
+    margin:0; padding:10px 12px calc(10px + var(--sab));
+    display:grid; grid-template-columns:1fr 1fr; gap:8px;
+    background:linear-gradient(180deg, #241a10, #1c1409 55%);
+    border-top:1px solid rgba(201,161,90,.25);
+  }
+  .review-btn{flex:none; justify-content:center; font-size:.72rem; padding:12px 8px;}
+  #btnSave{order:-2; grid-column:1/-1;}
+  #btnAddNote{order:1; grid-column:1/-1;}
+  /* Hueco DESPUÉS del pie de página (no antes), para que tanto el último
+     post-it como el crédito del footer queden libres de la barra fija,
+     incluso en el caso más alto (guardar + repaso/test + añadir = 3 filas). */
+  footer{padding-bottom:calc(170px + var(--sab));}
+}
+
+/* ---- Modo repaso ---- */
+.review-overlay{
+  position:fixed; inset:0; z-index:100; display:none;
+  flex-direction:column;
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(255,255,255,.03), transparent 40%),
+    linear-gradient(160deg, var(--cork-1), var(--cork-2));
+}
+.review-overlay.open{display:flex;}
+.review-top{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 5vw 8px; gap:12px; flex-wrap:wrap;
+}
+.review-exit{
+  font-family:'Oswald',sans-serif; font-size:.78rem; letter-spacing:.05em; text-transform:uppercase;
+  background:rgba(0,0,0,.3); border:1px solid rgba(255,255,255,.15); color:#f1e9db;
+  padding:9px 16px; min-height:44px; border-radius:8px; cursor:pointer;
+  display:inline-flex; align-items:center; touch-action:manipulation;
+}
+.review-exit:hover{background:rgba(0,0,0,.45);}
+.review-progress-txt{
+  font-family:'Oswald',sans-serif; font-size:.82rem; letter-spacing:.04em;
+  color:#e8dcc4;
+}
+.review-progress-txt b{color:#fff;}
+.review-mode-toggle{display:flex; gap:6px;}
+.rm-btn{
+  font-family:'Oswald',sans-serif; font-size:.68rem; letter-spacing:.05em; text-transform:uppercase;
+  padding:7px 12px; min-height:40px; border-radius:16px; border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.04); color:#d8cbb2; cursor:pointer;
+  display:inline-flex; align-items:center; touch-action:manipulation;
+}
+.rm-btn.active{background:var(--brass); color:#241a10; border-color:transparent;}
+.review-progress-bar{
+  height:5px; margin:0 5vw 6px; border-radius:4px; background:rgba(255,255,255,.1); overflow:hidden;
+}
+.review-progress-fill{height:100%; background:var(--brass); width:0%; transition:width .2s ease;}
+.review-card-wrap{
+  flex:1; display:flex; align-items:center; justify-content:center;
+  padding:12px 5vw; overflow-y:auto;
+}
+.review-card{
+  width:min(680px,100%); max-height:100%; overflow-y:auto;
+  background:var(--c,#e5d8b8); color:var(--ct,#241f1a);
+  padding:34px 32px 30px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+  font-family:'Kalam',cursive;
+  position:relative;
+  touch-action:pan-y;
+  -webkit-touch-callout:none;
+}
+.review-card .pit-head{
+  font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:.06em; text-transform:uppercase;
+  opacity:.75; margin-bottom:12px; display:flex; gap:10px; flex-wrap:wrap;
+}
+.review-card .pit-head .tagpill{display:inline-block; padding:2px 9px; border-radius:10px; background:rgba(0,0,0,.15);}
+.pit-title-lg{font-weight:700; font-size:1.5rem; margin-bottom:16px; line-height:1.2;}
+.review-body{font-size:1.12rem; line-height:1.55;}
+.review-body .ind1{margin-left:20px; display:block;}
+.review-body .ind2{margin-left:40px; display:block;}
+.review-body b{font-weight:700;}
+.swipe-stamp{
+  position:absolute; top:14px; opacity:0; pointer-events:none;
+  font-family:'Oswald',sans-serif; font-weight:700; font-size:.82rem;
+  letter-spacing:.06em; text-transform:uppercase;
+  padding:6px 12px; border-radius:8px; border:3px solid; z-index:2;
+}
+.swipe-stamp-repasar{left:14px; color:#e5573f; border-color:#e5573f; transform:rotate(-10deg);}
+.swipe-stamp-dominado{right:14px; color:#2e7d32; border-color:#2e7d32; transform:rotate(10deg);}
+.review-actions{
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  padding:14px 5vw 8px;
+}
+.review-actions button{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.78rem;
+  letter-spacing:.04em; text-transform:uppercase;
+  padding:11px 18px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  box-shadow:0 3px 8px rgba(0,0,0,.35);
+  display:inline-flex; align-items:center; touch-action:manipulation;
+}
+.rv-nav{background:rgba(255,255,255,.08); color:#f1e9db; border:1px solid rgba(255,255,255,.15) !important;}
+.rv-nav:hover{background:rgba(255,255,255,.15);}
+.rv-repasar{background:var(--B,#e5573f); color:#3a0d05;}
+.rv-dominado{background:var(--C,#7fc383); color:#0d2b0f;}
+.review-hint{
+  text-align:center; font-family:'Inter',sans-serif; font-size:.72rem; color:#a8977c;
+  padding-bottom:16px;
+}
+.review-summary{
+  width:min(560px,100%); text-align:center; color:#f1e9db; font-family:'Inter',sans-serif;
+}
+.review-summary h2{
+  font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.06em;
+  font-size:1.4rem; margin-bottom:18px; color:#f6ead2;
+}
+.review-summary .rs-row{
+  display:flex; justify-content:center; gap:28px; margin-bottom:26px; flex-wrap:wrap;
+}
+.review-summary .rs-num{font-family:'Oswald',sans-serif; font-size:2.1rem; font-weight:700;}
+.review-summary .rs-label{font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; opacity:.75;}
+.review-summary .rs-dominado .rs-num{color:#7fc383;}
+.review-summary .rs-repasar .rs-num{color:#e5573f;}
+.review-summary .rs-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+.review-summary button{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.78rem; text-transform:uppercase;
+  letter-spacing:.04em; padding:12px 20px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  display:inline-flex; align-items:center; touch-action:manipulation;
+}
+.rs-again{background:var(--brass); color:#241a10;}
+.rs-close{background:rgba(255,255,255,.08); color:#f1e9db; border:1px solid rgba(255,255,255,.15) !important;}
+@media (max-width:520px){
+  .review-card{padding:26px 20px 22px;}
+  .review-actions button{flex:1 1 42%;}
+}
+
+/* ---- Formulario Añadir nota ---- */
+.form-modal{
+  width:min(600px,100%); max-height:88vh; overflow-y:auto;
+  background:#efe4cb; color:#241f1a;
+  padding:30px 28px 26px; box-shadow:0 20px 60px rgba(0,0,0,.6);
+  font-family:'Inter',sans-serif;
+}
+.form-modal h2{
+  font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.05em;
+  font-size:1.3rem; margin:0 0 18px;
+}
+.form-row{margin-bottom:14px;}
+.form-row label{
+  display:block; font-family:'Oswald',sans-serif; font-size:.7rem; letter-spacing:.05em;
+  text-transform:uppercase; opacity:.7; margin-bottom:5px;
+}
+.form-row input[type=text], .form-row input[type=number], .form-row textarea, .form-row select{
+  width:100%; padding:12px 13px; border-radius:6px; border:1px solid rgba(0,0,0,.2);
+  font-family:'Inter',sans-serif; font-size:.92rem; background:#fff;
+  color:#241f1a; color-scheme:light; -webkit-text-fill-color:#241f1a;
+}
+.form-row textarea{min-height:120px; resize:vertical; font-family:'Kalam',cursive; font-size:1rem;}
+.form-hint{font-size:.72rem; opacity:.65; margin-top:4px;}
+.form-tags{display:flex; flex-wrap:wrap; gap:6px;}
+.form-tag-chip{
+  font-size:.7rem; font-family:'Oswald',sans-serif; letter-spacing:.04em; text-transform:uppercase;
+  padding:5px 10px; border-radius:14px; border:1px solid rgba(0,0,0,.2); cursor:pointer;
+  background:#fff; opacity:.6;
+}
+.form-tag-chip.active{opacity:1; box-shadow:0 1px 4px rgba(0,0,0,.3);}
+.form-actions{display:flex; gap:10px; justify-content:flex-end; margin-top:20px;}
+.form-actions button{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.78rem; text-transform:uppercase;
+  letter-spacing:.04em; padding:11px 18px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  touch-action:manipulation;
+}
+.fa-cancel{background:rgba(0,0,0,.08); color:#241f1a;}
+.fa-submit{background:var(--brass); color:#241a10;}
+.form-error{color:#b3261e; font-size:.8rem; margin-top:4px; display:none;}
+.form-error.show{display:block;}
+.extra-note-delete{
+  margin-top:16px; padding-top:12px; border-top:2px dashed rgba(0,0,0,.25);
+  font-family:'Oswald',sans-serif; font-size:.72rem; letter-spacing:.05em; text-transform:uppercase;
+  background:none; border-radius:6px; color:#b3261e; cursor:pointer; padding:8px 0; display:block;
+}
+.save-toast{
+  position:fixed; bottom:22px; left:50%; transform:translateX(-50%);
+  background:#241a10; color:#f1e9db; padding:12px 22px; border-radius:8px;
+  font-family:'Inter',sans-serif; font-size:.85rem; box-shadow:0 8px 24px rgba(0,0,0,.5);
+  z-index:200; opacity:0; pointer-events:none; transition:opacity .25s ease;
+}
+.save-toast.show{opacity:1;}
+
+/* ===== TEST RÁPIDO ===== */
+.quiz-overlay{
+  position:fixed; inset:0; background:rgba(10,6,3,.82);
+  display:none; align-items:center; justify-content:center;
+  padding:20px; z-index:80;
+  padding-top:calc(20px + var(--sat)); padding-bottom:calc(20px + var(--sab));
+  padding-left:calc(20px + var(--sal)); padding-right:calc(20px + var(--sar));
+}
+.quiz-overlay.open{display:flex;}
+.quiz-card{
+  width:min(680px, 100%);
+  max-height:92vh; max-height:92dvh;
+  overflow-y:auto; overscroll-behavior:contain; -webkit-overflow-scrolling:touch;
+  background:linear-gradient(160deg,#3a2818,#2a1c10);
+  border:1px solid rgba(201,161,90,.25);
+  border-radius:14px;
+  padding:0;
+  box-shadow:0 24px 70px rgba(0,0,0,.65);
+  color:#f1e9db;
+  position:relative;
+}
+@media (max-width:520px){
+  .quiz-overlay{padding:0;}
+  .quiz-card{
+    width:100%; height:100%; height:100dvh; max-height:none;
+    border-radius:0; border:none;
+    padding-top:var(--sat); padding-bottom:var(--sab);
+    padding-left:var(--sal); padding-right:var(--sar);
+  }
+}
+.quiz-top{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:16px 22px; border-bottom:1px solid rgba(255,255,255,.08);
+  font-family:'Oswald',sans-serif;
+}
+.quiz-top-left{display:flex; align-items:center; gap:14px;}
+.quiz-brand{font-weight:700; letter-spacing:.08em; text-transform:uppercase; font-size:.82rem; color:var(--brass);}
+.quiz-progress-txt{font-size:.8rem; color:#c9b998;}
+.quiz-exit{
+  background:none; border:1px solid rgba(255,255,255,.18); color:#f1e9db;
+  border-radius:6px; padding:6px 12px; cursor:pointer; font-family:'Inter',sans-serif; font-size:.78rem;
+  min-height:44px; min-width:44px; touch-action:manipulation; user-select:none; -webkit-user-select:none;
+}
+.quiz-exit:hover{background:rgba(255,255,255,.08);}
+.quiz-progress-bar{
+  height:4px; background:rgba(255,255,255,.08); position:relative; overflow:hidden;
+}
+.quiz-progress-fill{
+  height:100%; background:var(--brass); width:0%; transition:width .25s ease;
+}
+.quiz-body{padding:26px 26px 8px;}
+.quiz-qnum{
+  font-family:'Oswald',sans-serif; font-size:.7rem; letter-spacing:.08em; text-transform:uppercase;
+  color:#a9977a; margin-bottom:10px;
+}
+.quiz-question{
+  font-family:'Kalam',cursive; font-size:1.28rem; line-height:1.4;
+  margin-bottom:22px; color:#f6ead2;
+}
+.quiz-options{display:flex; flex-direction:column; gap:10px; margin-bottom:8px;}
+.quiz-opt{
+  display:flex; align-items:center; gap:12px;
+  text-align:left; width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  padding:13px 16px;
+  min-height:44px;
+  color:#f1e9db;
+  font-family:'Inter',sans-serif; font-size:.96rem;
+  cursor:pointer;
+  touch-action:manipulation; user-select:none; -webkit-user-select:none;
+  transition:background .15s ease, border-color .15s ease, transform .1s ease;
+}
+@media (hover:hover) and (pointer:fine){
+  .quiz-opt:hover:not(.disabled){background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.25); transform:translateX(2px); will-change:transform;}
+}
+.quiz-opt .opt-letter{
+  flex:none; width:26px; height:26px; border-radius:50%;
+  background:rgba(255,255,255,.1);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.78rem;
+}
+.quiz-opt.disabled{cursor:default;}
+.quiz-opt.correct{background:rgba(127,195,131,.22); border-color:#7fc383;}
+.quiz-opt.correct .opt-letter{background:#7fc383; color:#0d2b0f;}
+.quiz-opt.incorrect{background:rgba(229,87,63,.22); border-color:#e5573f;}
+.quiz-opt.incorrect .opt-letter{background:#e5573f; color:#3a0d05;}
+.quiz-feedback{
+  font-family:'Inter',sans-serif; font-size:.88rem;
+  padding:12px 14px; border-radius:8px; margin:14px 0 4px;
+  display:none;
+}
+.quiz-feedback.show{display:block;}
+.quiz-feedback.ok{background:rgba(127,195,131,.14); color:#a8dfab; border:1px solid rgba(127,195,131,.3);}
+.quiz-feedback.ko{background:rgba(229,87,63,.14); color:#f2b3a5; border:1px solid rgba(229,87,63,.3);}
+.quiz-nav{
+  display:flex; justify-content:flex-end; gap:10px;
+  padding:16px 26px 26px;
+}
+.quiz-next-btn{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.82rem;
+  letter-spacing:.05em; text-transform:uppercase;
+  padding:11px 24px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  background:var(--brass); color:#241a10;
+  box-shadow:0 3px 10px rgba(0,0,0,.4);
+  opacity:.4; pointer-events:none;
+  touch-action:manipulation; user-select:none; -webkit-user-select:none;
+  transition:opacity .15s ease, transform .12s ease;
+}
+.quiz-next-btn.enabled{opacity:1; pointer-events:auto;}
+@media (hover:hover) and (pointer:fine){
+  .quiz-next-btn.enabled:hover{transform:translateY(-1px); will-change:transform;}
+}
+
+.quiz-summary{padding:36px 30px 30px; text-align:center;}
+.quiz-summary h2{
+  font-family:'Oswald',sans-serif; text-transform:uppercase; letter-spacing:.06em;
+  font-size:1.5rem; margin:0 0 6px; color:#f6ead2;
+}
+.quiz-summary .qs-sub{color:#c9b998; font-size:.85rem; margin-bottom:26px; font-family:'Inter',sans-serif;}
+.quiz-score-ring{
+  width:150px; height:150px; margin:0 auto 22px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:conic-gradient(var(--brass) calc(var(--pct,0)*1%), rgba(255,255,255,.08) 0);
+  position:relative;
+}
+.quiz-score-ring::before{
+  content:""; position:absolute; inset:10px; border-radius:50%;
+  background:#2a1c10;
+}
+.quiz-score-num{position:relative; font-family:'Oswald',sans-serif; font-weight:700; font-size:1.9rem; color:#f6ead2;}
+.quiz-score-num small{display:block; font-size:.65rem; font-weight:400; letter-spacing:.06em; text-transform:uppercase; color:#c9b998; margin-top:2px;}
+.quiz-summary-actions{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:6px;}
+.quiz-summary-actions button{
+  font-family:'Oswald',sans-serif; font-weight:600; font-size:.8rem;
+  letter-spacing:.05em; text-transform:uppercase;
+  padding:11px 20px; min-height:44px; border-radius:8px; border:none; cursor:pointer;
+  touch-action:manipulation; user-select:none; -webkit-user-select:none;
+  transition:transform .12s ease;
+}
+@media (hover:hover) and (pointer:fine){
+  .quiz-summary-actions button:hover{transform:translateY(-1px);}
+}
+.qs-retry{background:var(--brass); color:#241a10;}
+.qs-close{background:rgba(255,255,255,.08); color:#f1e9db; border:1px solid rgba(255,255,255,.18) !important;}
+.quiz-review-list{
+  text-align:left; margin-top:26px; padding-top:20px; border-top:1px solid rgba(255,255,255,.08);
+  display:flex; flex-direction:column; gap:10px; max-height:260px; overflow-y:auto;
+}
+.qrl-item{
+  font-family:'Inter',sans-serif; font-size:.82rem; padding:10px 12px;
+  border-radius:8px; background:rgba(255,255,255,.04);
+  border-left:3px solid #e5573f;
+}
+.qrl-item.ok{border-left-color:#7fc383;}
+.qrl-item b{display:block; margin-bottom:3px; color:#f1e9db;}
+
+</style>
+</head>
+<body>
+<div class="board-frame">
+<header>
+  <h1>El <span>Corcho</span></h1>
+  <div class="subtitle">Sistema de repaso · Oposición CNP Escala Básica</div>
+  <div class="stats" aria-live="polite"><b id="statVisible">0</b> post-its de <b id="statTotal">0</b> · <span id="statNota">66 notas originales</span> · <b id="statDominadas">0</b> dominadas</div>
+</header>
+
+<div class="controls">
+  <div class="searchbar">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+    <input id="search" type="text" inputmode="search" enterkeyhint="search" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Buscar por texto, dato, mnemotecnia o número de nota…">
+    <button type="button" class="search-clear" id="searchClear" aria-label="Borrar búsqueda" hidden="">✕</button>
+  </div>
+  <div class="chips" id="chips"></div>
+  <div class="review-launch">
+    <button class="review-btn save-btn" id="btnSave"><span class="dot"></span> Guardar cambios</button>
+    <button class="review-btn secondary" id="btnAddNote">+ Añadir nota</button>
+    <button class="review-btn" id="btnStartReview">▶ Modo repaso rápido</button>
+    <button class="review-btn" id="btnStartQuiz">📝 Test (20 preguntas)</button>
+  </div>
+</div>
+
+<div class="board" id="board"></div>
+
+<footer>Fase 1 — El corcho · Generado a partir de ANOTACIONES.docx · el motor de repaso (Fase 2) llega después</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modalCard">
+    <div class="pin"></div>
+    <div class="modal-handle" id="modalHandle"></div>
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-head" id="modalHead"></div>
+    <div class="modal-title" id="modalTitle"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<div class="review-overlay" id="reviewOverlay">
+  <div class="review-top">
+    <button class="review-exit" id="reviewExit">✕ Salir del repaso</button>
+    <div class="review-progress-txt"><b id="reviewIdxTxt">1</b> / <span id="reviewTotalTxt">0</span></div>
+    <div class="review-mode-toggle">
+      <button class="rm-btn active" id="rmAll">Todo lo filtrado</button>
+      <button class="rm-btn" id="rmPending">Solo pendientes</button>
+    </div>
+  </div>
+  <div class="review-progress-bar"><div class="review-progress-fill" id="reviewFill"></div></div>
+
+  <div class="review-card-wrap" id="reviewCardWrap">
+    <div class="review-card" id="reviewCard">
+      <div class="swipe-stamp swipe-stamp-repasar" id="stampRepasar" aria-hidden="true">🔁 Repasar</div>
+      <div class="swipe-stamp swipe-stamp-dominado" id="stampDominado" aria-hidden="true">✓ Lo tengo claro</div>
+      <div class="pit-head" id="reviewHead"></div>
+      <div class="pit-title-lg" id="reviewTitle"></div>
+      <div class="review-body" id="reviewBody"></div>
+    </div>
+  </div>
+
+  <div class="review-actions" id="reviewActions">
+    <button class="rv-nav" id="reviewPrev">← Anterior</button>
+    <button class="rv-repasar" id="reviewMarkRepasar">🔁 Repasar de nuevo <span style="opacity:.7">(R)</span></button>
+    <button class="rv-dominado" id="reviewMarkDominado">✓ Lo tengo claro <span style="opacity:.7">(D)</span></button>
+    <button class="rv-nav" id="reviewNext">Siguiente →</button>
+  </div>
+  <div class="review-hint">Desliza la tarjeta: ← repasar de nuevo · → lo tengo claro &nbsp;|&nbsp; Teclado: ← → navegar · R repasar · D lo tengo claro · Esc salir</div>
+</div>
+
+<div class="overlay" id="addOverlay">
+  <div class="form-modal" id="addFormModal">
+    <button class="modal-close" id="addFormClose">✕</button>
+    <h2>Añadir nota al corcho</h2>
+    <div class="form-row">
+      <label for="fCat">Categoría principal</label>
+      <select id="fCat"></select>
+    </div>
+    <div class="form-row">
+      <label>Etiquetas adicionales (opcional)</label>
+      <div class="form-tags" id="fTags"></div>
+    </div>
+    <div class="form-row">
+      <label for="fNota">Nº de nota</label>
+      <input type="number" id="fNota" min="1" inputmode="numeric" enterkeyhint="next">
+      <div class="form-hint">Se sugiere automáticamente el siguiente número, pero puedes agrupar bajo uno existente.</div>
+    </div>
+    <div class="form-row">
+      <label for="fTitulo">Título</label>
+      <input type="text" id="fTitulo" inputmode="text" enterkeyhint="next" autocorrect="on" autocapitalize="sentences" placeholder="Ej: Plazos de caducidad">
+    </div>
+    <div class="form-row">
+      <label for="fBody">Contenido</label>
+      <textarea id="fBody" inputmode="text" enterkeyhint="done" autocorrect="on" autocapitalize="sentences" placeholder="Escribe libremente. **negrita** con asteriscos. Línea que empieza con &quot;- &quot; = sangría, con &quot;-- &quot; = doble sangría."></textarea>
+      <div class="form-hint">Cada línea nueva se separa automáticamente. Puedes usar HTML si lo prefieres.</div>
+    </div>
+    <div class="form-error" id="fError">Rellena al menos título y contenido.</div>
+    <div class="form-actions">
+      <button class="fa-cancel" id="fCancel">Cancelar</button>
+      <button class="fa-submit" id="fSubmit">Añadir al corcho</button>
+    </div>
+  </div>
+</div>
+
+<div class="save-toast" id="saveToast"></div>
+
+<div class="quiz-overlay" id="quizOverlay">
+  <div class="quiz-card" id="quizCard">
+
+    <div id="quizPlayWrap">
+      <div class="quiz-top">
+        <div class="quiz-top-left">
+          <span class="quiz-brand">📝 Test rápido</span>
+          <span class="quiz-progress-txt"><b id="quizIdxTxt">1</b> / <span id="quizTotalTxt">20</span></span>
+        </div>
+        <button class="quiz-exit" id="quizExit">✕ Salir</button>
+      </div>
+      <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgressFill"></div></div>
+      <div class="quiz-body">
+        <div class="quiz-qnum" id="quizQnum">PREGUNTA 1 DE 20</div>
+        <div class="quiz-question" id="quizQuestion"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <div class="quiz-feedback" id="quizFeedback"></div>
+      </div>
+      <div class="quiz-nav">
+        <button class="quiz-next-btn" id="quizNextBtn">Siguiente →</button>
+      </div>
+    </div>
+
+    <div id="quizSummaryWrap" style="display:none;"></div>
+
+  </div>
+</div>
+
+
+
+<script>
+// Instantánea del documento tal y como se cargó, ANTES de que el script pinte
+// nada dinámico (tablero, chips, etc.). Se usa luego para regenerar el archivo
+// completo al guardar notas nuevas, sin tocar el resto del HTML/CSS.
+const __PRISTINE_HTML__ = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
+const CATS = {
+  A:{label:'Derecho Constitucional', c:'#f6c453', ct:'#3a2c00'},
+  B:{label:'Derecho Penal y Procesal', c:'#e5573f', ct:'#3a0d05'},
+  C:{label:'Derecho Civil', c:'#7fc383', ct:'#0d2b0f'},
+  D:{label:'Derecho Administrativo', c:'#f2a35c', ct:'#3a1f00'},
+  E:{label:'Extranjería', c:'#5aa9e6', ct:'#04203a'},
+  F:{label:'Protección de Datos', c:'#a97fe0', ct:'#25073a'},
+  G:{label:'Estructura DGP', c:'#3fb8af', ct:'#00302c'},
+  H:{label:'Unión Europea', c:'#5b78ea', ct:'#0a1440'},
+  I:{label:'Derechos Humanos', c:'#f2a6c1', ct:'#40071e'},
+  J:{label:'Psicología y Sociología', c:'#a3c65a', ct:'#1c2900'},
+  K:{label:'Armas y Licencias', c:'#a7b0ba', ct:'#1a1f24'},
+  L:{label:'Varios / Datos sueltos', c:'#cdbfa5', ct:'#2b2010'}
+};
+
+// cada post-it: id, nota (nº original), cat (principal), tags (categorías adicionales),
+// titulo, body (HTML fiel al contenido de la nota), original (anotación sobre color/tachón si la había)
+const P = [
+{id:'1',nota:1,cat:'K',titulo:'Clasificación legal de armas',body:`
+<b>1.</b> Arma corta<br>
+<b>2.1</b> Armas de fuego largas — para vigilancia y guardería<br>
+<b>2.2</b> Armas de fuego largas rayadas<br>
+<b>3.1</b> Armas de fuego largas rayadas para tiro deportivo (calibre 5'6mm, percusión anular)<br>
+<b>3.2</b> Escopetas y demás armas de ánima lisa o agujereadas con cañón con rayas (plomeo)<br>
+<b>3.3</b> Armas accionadas por aire o gas comprimido (no exceda 24,2 julios)<br>
+<b>4.1</b> Carabinas y pistolas (accionadas x gas) — lúdico-deportivas airsoft y paintball (tarjeta A) <i>[doble acción]</i><br>
+<b>4.2</b> Carabinas y pistolas de ánima lisa (gas) airsoft/paintball x muelle o resorte <i>[acción simple]</i><br>
+<b>5.1</b> Armas blancas (no prohibidas)<br>
+<b>5.2</b> Cuchillos y machetes (militares)<br>
+<b>6.1</b> Antiguas / históricas<br>
+<b>6.2</b> Armas de fuego anteriores a 1/1/1890<br>
+<b>6.3</b> Restantes armas históricas/artísticas<br>
+<b>6.4</b> Avancarga<br>
+<b>7.1</b> Armas de inyección anestésica &nbsp; <b>7.2</b> Ballestas &nbsp; <b>7.3</b> Lanzacabos<br>
+<b>7.4</b> Flobert &nbsp; <b>7.5</b> Arcos, pesca, fusiles de pesca &nbsp; <b>7.6</b> Arma de alarma y señales<br>
+<b>8.1</b> Arma acústica y de salvas<br>
+<b>9.1</b> Armas inutilizadas`},
+
+{id:'2',nota:2,cat:'H',titulo:'Tratados de la Unión Europea (Tema 4)',body:`
+<b>París (1951/1952)</b> — CECA — 6 países. Plan Schuman. <i>[Fundacional]</i><br>
+<b>Roma (1957/1958)</b> — CEE, Euratom, Mercado Común, BEI, FSE, Unión Aduanera. <i>[Fundacional]</i><br>
+<b>Bruselas/Fusión (1965-1967)</b> — CECA+Euratom+CEE, Comisión, Consejo. <i>[Complementario]</i><br>
+<b>Acta Única (1986/1987)</b> — Mayoría cualificada, P.E. oficial, España y Portugal. <i>[Modificativo]</i><br>
+<b>Maastricht (1992/1993)</b> — Nace la UE, 3 pilares, ciudadanía UE, BCE, Europol. <i>[Fundacional]</i><br>
+<b>Ámsterdam (1997/1999)</b> — Schengen, PESC. <i>[Modificativo]</i><br>
+<b>Niza (2001/2003)</b> — De 15 a 25 miembros, Comité de Protección Social. <i>[Modificativo]</i><br>
+<b>Lisboa (2007/2009)</b> — Personalidad jurídica única, inicia ciudadanía, presidencia del Consejo. <i>[Modificativo]</i>`},
+
+{id:'3',nota:3,cat:'F',titulo:'Plazos de medidas de investigación tecnológica',body:`
+<b>Correspondencia:</b> Inicial 3 meses · Prórroga 18 meses · Urgencia 72h<br>
+<b>Interceptación telefónica:</b> Inicial 3 meses · Prórroga 18 meses · Urgencia 72h<br>
+<b>Grabación oral de encuentros:</b> sin plazo específico<br>
+<b>Seguimiento y localización:</b> Inicial 3 meses · Prórroga 18 meses · Urgencia 24h<br>
+<b>Dispositivos de captación masiva:</b> Urgencia 72h (sin plazo inicial/prórroga)<br>
+<b>Registros remotos:</b> Inicial 1 mes · Prórroga 3 meses · sin plazo de urgencia`},
+
+{id:'4',nota:4,cat:'A',titulo:'El Gobierno: dirige y ejerce',body:`
+<b>El Gobierno DIRIGE:</b><br>
+<span class="ind1">• Política exterior e interior</span>
+<span class="ind1">• Administración civil y militar</span>
+<span class="ind1">• Defensa del Estado</span><br>
+<b>El Gobierno EJERCE:</b><br>
+<span class="ind1">• Función ejecutiva</span>
+<span class="ind1">• Potestad reglamentaria de acuerdo a la CE y las leyes</span>`},
+
+{id:'5',nota:5,cat:'I',titulo:'Cumbres de Desarrollo Sostenible',body:`
+<b>1ª Cumbre</b> — 1972 — Estocolmo. El Club de Roma publica "Los límites del crecimiento", que define por primera vez "desarrollo sostenible" → <b>"Nuestro futuro común"</b><br>
+<b>2ª Cumbre</b> — 1992 — Río de Janeiro<br>
+<b>3ª Cumbre</b> — 2002 — Río+10 — Johannesburgo<br>
+<b>4ª Cumbre</b> — 2012 — Río+20 — Río de Janeiro → <b>"El futuro que queremos"</b><br>
+Límite al calentamiento global por debajo de 2°C — COP21: 2015 — Objetivos de Desarrollo — Agenda 2030`,
+original:'Transcripción corregida aplicando un tachón y una flecha del original.'},
+
+{id:'6',nota:6,cat:'J',titulo:'Pirámide de necesidades (Maslow)',body:`
+1. Fisiológica <i>(base)</i><br>2. Seguridad<br>3. Afiliación<br>4. Reconocimiento<br>5. Autorrealización <i>(cúspide)</i><br><br>
+<b>Deficit needs</b> (necesidades de déficit): N1, N2 → Fisiológica y Seguridad<br>
+<b>Being needs</b> (necesidades de ser/crecimiento): N3, N4, N5 → Afiliación, Reconocimiento y Autorrealización`},
+
+{id:'7',nota:7,cat:'A',titulo:'Estructura de la Constitución (I)',body:`
+Preámbulo + Título Preliminar + 10 Títulos + Disposiciones<br><br>
+<b>Título Preliminar</b> — Art. 1-9<br>
+<b>Título I</b> "Derechos y deberes fundamentales" Art. 10-55<br>
+<span class="ind1">Art. 10</span>
+<span class="ind1">Cap. I — De los españoles y extranjeros. Art. 11-13</span>
+<span class="ind1">Cap. II — De los derechos y libertades. Art. 14-38</span>
+<span class="ind2">Art. 14</span>
+<span class="ind2">Sec. 1 — Libertades y derechos fundamentales. Art. 15-29</span>
+<span class="ind2">Sec. 2 — Derechos y deberes de los ciudadanos. Art. 30-38</span>
+<span class="ind1">Cap. III — Principios rectores de la política social y económica. Art. 39-52</span>
+<span class="ind1">Cap. IV — De las garantías de los derechos fundamentales y libertades. Art. 53-54</span>
+<span class="ind1">Cap. V — De la suspensión de los derechos fundamentales. Art. 55</span>
+<b>Título II</b> "La Corona" Art. 56-65<br>
+<b>Título III</b> "De las Cortes Generales" Art. 66-96<br>
+<span class="ind1">Cap. I — De las Cámaras. Art. 66-80</span>
+<span class="ind1">Cap. II — De la elaboración de las leyes. Art. 81-92</span>
+<span class="ind1">Cap. III — De los tratados internacionales. Art. 93-96</span>
+<b>Título IV</b> "Del Gobierno y la Administración" Art. 97-107<br>
+<b>Título V</b> "De las relaciones entre el Gobierno y las Cortes Generales" Art. 108-116<br>
+<b>Título VI</b> "Del Poder Judicial" Art. 117-127<br>
+<b>Título VII</b> "Economía y Hacienda" Art. 128-136`},
+
+{id:'8',nota:8,cat:'A',titulo:'Estructura de la Constitución (II) y fechas clave',body:`
+<b>Título VIII</b> — Organización territorial del Estado. Art. 137-158<br>
+<span class="ind1">Cap. I — Principios generales. Art. 137-139</span>
+<span class="ind1">Cap. II — Administración local. Art. 140-142</span>
+<span class="ind1">Cap. III — De las CCAA. Art. 143-158</span>
+<b>Título IX</b> — Del Tribunal Constitucional. Art. 159-165<br>
+<b>Título X</b> — De la reforma constitucional. Art. 166-169<br><br>
+<b>Disposiciones:</b> 4 adicionales · 9 transitorias · 1 derogatoria · 1 final<br><br>
+<b>Fechas de la Constitución:</b><br>
+<span class="ind1">31 octubre — Aprobación por las Cortes Generales</span>
+<span class="ind1">6 diciembre — Ratificada por referéndum</span>
+<span class="ind1">27 diciembre — El Rey sanciona y promulga</span>
+<span class="ind1">29 diciembre — Publicación en el BOE y entrada en vigor</span>`},
+
+{id:'9',nota:9,cat:'A',titulo:'Recurso y cuestión de inconstitucionalidad',body:`
+<b>Recurso de inconstitucionalidad</b> — legitimados:<br>
+<span class="ind1">• Presidente del Gobierno</span>
+<span class="ind1">• Defensor del Pueblo</span>
+<span class="ind1">• 50 Diputados o 50 Senadores</span>
+<span class="ind1">• Órganos colegiados y asambleas legislativas de las CCAA</span><br>
+<b>Cuestión de inconstitucionalidad</b> — la plantean:<br>
+<span class="ind1">• Jueces o Tribunales</span>`},
+
+{id:'10',nota:10,cat:'B',titulo:'Teoría del delito: las 4 preguntas',body:`
+<b>¿Está descrita la conducta en el CP?</b> <i>(Tipicidad)</i><br>→ Causa de exclusión: <b>error de tipo invencible</b><br><br>
+<b>¿Está justificada?</b> <i>(Antijuridicidad)</i><br>→ Causas: <b>minoría de edad, alteración psíquica, intoxicación…</b><br><br>
+<b>¿Es responsable / imputable?</b> <i>(Culpabilidad)</i><br>→ Causas: <b>miedo insuperable, estado de necesidad</b><br><br>
+<b>¿Se puede castigar?</b> <i>(Punibilidad)</i><br>→ Causa: <b>excusa absolutoria</b>`},
+
+{id:'11',nota:11,cat:'A',titulo:'Defensor del Pueblo: elección y nombramiento',body:`
+<b>Elegido por:</b> Cortes Generales<br>
+<b>Candidato propuesto por:</b> Comisión mixta Congreso-Senado<br>
+<b>Nombrado por:</b> Firmas del Presidente del Congreso y del Senado<br>
+<b>Toma de posesión ante:</b> Mesas del Congreso y del Senado reunidas conjuntamente`},
+
+{id:'12',nota:12,cat:'K',tags:['G'],titulo:'Funciones del Jefe de Seguridad',original:'Palabras clave recuadradas en rosa/rojo en el original.',body:`
+<b>Palabras clave</b> — funciones del Jefe de Seguridad:<br>
+<span class="ind1">• Servicios de seguridad reglamentaria</span>
+<span class="ind1">• Traslado de armas</span>
+<span class="ind1">• Formación</span>
+<span class="ind1">• Normativa</span>
+<span class="ind1">• Garantizar la colaboración</span>`},
+
+{id:'13',nota:13,cat:'A',titulo:'CGPJ: composición y mayorías',body:`
+Mayoría requerida: <b>3/5</b> &nbsp;·&nbsp; Mandato: <b>5 años</b><br><br>
+<b>Composición:</b> Presidente + 20 vocales<br>
+<span class="ind1"><b>12 Jueces y Magistrados</b> — 6 por el Congreso (3/5) + 6 por el Senado (3/5)</span>
+<span class="ind1"><b>8 Juristas</b> — 4 por el Congreso (3/5) + 4 por el Senado (3/5)</span>`},
+
+{id:'14',nota:14,cat:'A',titulo:'Tribunal Constitucional: composición',body:`
+<b>12 miembros</b> (9 años, renovación por tercios)<br>
+<span class="ind1">• 4 por el Congreso (3/5)</span>
+<span class="ind1">• 4 por el Senado (3/5)</span>
+<span class="ind1">• 2 por el Gobierno</span>
+<span class="ind1">• 2 por el CGPJ</span><br>
+El propio Tribunal elige a su presidente, por 3 años`},
+
+{id:'15',nota:15,cat:'C',titulo:'Corporaciones, asociaciones y fundaciones',body:`
+<b>Corporaciones</b> → se rigen por Leyes<br>
+<b>Asociaciones</b> → se rigen por Estatutos<br>
+<b>Fundaciones</b> → se rigen por Reglas`},
+
+{id:'16',nota:16,cat:'C',titulo:'Declaración de fallecimiento: plazos',body:`
+<b>Inmediato</b> — comprobado, no superviviente<br>
+<b>8 días</b> — comprobado, puede haber supervivientes<br>
+<b>1 mes</b> — presunto, aeronave/barco<br>
+<b>3 meses</b> — siniestro, sin barco ni aeronave<br>
+<b>1 año</b> — riesgo de muerte por violencia<br>
+<b>2 años</b> — desaparición en campaña<br>
+<b>5 años</b> — desde la desaparición si +75 años<br>
+<b>10 años</b> — desaparición`},
+
+{id:'17',nota:17,cat:'E',titulo:'Extranjería: plazos clave',body:`
+<b>Régimen comunitario (RD 240/2007):</b><br>
+<span class="ind1">Inscripción RCE: 3M desde entrada</span>
+<span class="ind1">Familiar no comunitario, solicitud tarjeta residencia: 3M</span>
+<span class="ind1">Caducidad certificado de registro: 6M en 1 año</span>
+<span class="ind1">Levantamiento prohibición de entrada: 3 años desde ejecución</span>
+<span class="ind1">Resolución: 3M</span><br>
+<b>TIE:</b><br>
+<span class="ind1">Solicitud tras residencia +6M: 1 mes</span>
+<span class="ind1">Renovación RLD menor 30 años: cada 5 años</span>
+<span class="ind1">Renovación RLD mayor 30 años: cada 10 años</span>
+<span class="ind1">Margen para renovar: 2M antes o hasta 3M después</span><br>
+<b>Estancias:</b><br>
+<span class="ind1">Denegación de prórroga sin visado: 72H para salir</span>
+<span class="ind1">Información del R.C. de penados e infracciones policiales: 5 días</span><br>
+<b>TSH (trata de seres humanos):</b><br>
+<span class="ind1">Periodo de reflexión: mínimo 90 días</span>
+<span class="ind1">Resolución del delegado/subdelegado: 5 días</span>
+<span class="ind1">Resolución si la víctima está en CIE: 24H</span>
+<span class="ind1">Silencio administrativo: positivo</span><br>
+<b>MENA:</b><br>
+<span class="ind1">Plazo máximo de repatriación: 6M</span>
+<span class="ind1">Sin retorno efectivo, inicio trámite de residencia: 90 días</span><br>
+<b>Arraigos:</b><br>
+<span class="ind1">Todos los arraigos: autorización por 1 año</span>
+<span class="ind1">Excepción — arraigo familiar: autorización por 5 años</span>`},
+
+{id:'18',nota:18,cat:'B',titulo:'Las cuatro garantías penales',body:`
+<b>Garantía criminal</b> — <i>nullum crimen (delito) sine lege</i><br>
+<b>Garantía penal</b> — <i>nullum pena sine lege</i><br>
+<b>Garantía procesal/judicial</b> — <i>nullum pena sine juicio</i><br>
+<b>Garantía de ejecución</b> — se ejecutará en la forma prescrita en la ley`},
+
+{id:'19',nota:19,cat:'G',titulo:'CGPJ (Comisaría General de Policía Judicial)',body:`
+GRECO — UDYCO — Bc. Crimen Organizado (FGE adscrita)<br>
+Consumidores y Dopaje Deportivo → UDEV — B.C.I. Delitos contra las personas<br>
+O.L.A. — B.C. Blanqueo, Anticorrupción<br>
+F.E. Corrupción y Crimen Organizado — UDEF<br>
+Fraude BEC — B.S.I. (UCC)<br>
+Oficina de Estudios — UFAM`},
+
+{id:'20',nota:20,cat:'G',titulo:'CGSC',body:`
+<b>UCOT</b><br>
+<span class="ind1">B. Coordinación Operativa → O.N. Deportes / O.C. Asuntos Taurinos</span>
+<b>UC Seguridad P.V.</b><br>
+<span class="ind1">Interlocutor PN Sanitario / Foro PN para Igualdad</span>
+<b>U.C. Participación Ciudadana</b><br>
+<span class="ind1">Interlocución Delitos de Odio</span>`},
+
+{id:'21',nota:21,cat:'G',titulo:'C.G. Policía Científica',body:`
+BINCIPOL — BCO — UCOT<br>
+<b>U.C. Identificación</b>, agrupa: EURODAC — Facial — Biométrica; Personas Desaparecidas<br>
+Ingeniería — U.C. Tecnología y R.I.`},
+
+{id:'22',nota:22,cat:'G',titulo:'DOTD',body:`Observatorio Tecnológico — UCAT — Desarrollo Tecnológico`},
+
+{id:'23',nota:23,cat:'G',titulo:'DCI',body:`
+O.N. Interpol → Extradiciones y Traslados Internacionales<br>
+Of. Sirene → OEDE, Post-it (ADN/Huella)`},
+
+{id:'24',nota:24,cat:'G',titulo:'Gabinete Técnico',body:`
+SG - Asuntos Generales → Oficina de Asistencia, Materia de Registros, OTIL<br>
+Área Jurídica → Oficina de Protección de Datos<br>
+Área DDHH e Igualdad → Oficina de Igualdad de Género<br>
+Área Coord. Institucional e Identidad Corporativa → Servicio de Protocolo (Banda de Música), Oficina Marca PN`},
+
+{id:'25',nota:25,cat:'G',titulo:'C.G. Extranjería y Fronteras',body:`
+Registro Central de Extranjeros y Registro de MENAS — S.G.<br>
+Redes de Inmigración — UCRIF<br>
+Oficial de Enlace — BC Acción Exterior<br>
+Víctimas de TSH — BC. TSH<br>
+CIE y CATES — U.C. Repatriaciones<br>
+<b>CENIF</b> agrupa: NFPOC, NCC, Frontex`},
+
+{id:'26',nota:26,cat:'G',titulo:'Subd. Gen. RRHH y Formación',body:`
+Adscrito a S.G.: Secretaría Consejo de Policía, Secretaría Comisión Seguridad y Salud Policial<br>
+Ud. PRL y Protección Sociosanitaria — Área Sanitaria: Absentismo y Acción Social`},
+
+{id:'27',nota:27,cat:'G',titulo:'Subd. Gen. Logística e Innovación',body:`
+Gabinete Asuntos Jurídicos — S.G.<br>
+Inhibición Drones — U. Informática y Tecnología — Área Telecomunicaciones<br>
+Centro de Protección de Datos — U. Informática Tecnología — Área Informática`},
+
+{id:'28',nota:28,cat:'G',titulo:'Div. Económica y Técnica',body:`
+Labores Imprenta — S.G.<br>
+Área Automoción - Ud. Técnica → Autoescuela DGP, GOIT`},
+
+{id:'29',nota:29,cat:'G',titulo:'Div. Documentación',body:`
+Accede Registro C. Extranjeros — S.G.<br>
+Archivo General M.I. — Área Tratamiento Documental y Archivo`},
+
+{id:'30',nota:30,cat:'G',titulo:'División de Personal',body:`
+S.G. (incluye Área de Retribuciones) → Tribunal Médico Of. Policial<br>
+Área Baremación → Catálogo de Puestos de CA PN`},
+
+{id:'31',nota:31,cat:'G',titulo:'División Formación y Perfeccionamiento (DFP)',body:`
+Centro de Idiomas — S.G.<br>
+Campus Virtual — S.G. — Área Innovación Formativa<br>
+Iberpol — Escuela Nacional Policía (Ávila)<br>
+Campus - Régimen Interno (conecta con Escuela Nac. Policía Ávila)<br>
+CEPOL — CAE<br>
+Instituto de Estudios de la Policía — CAEP`},
+
+{id:'32',nota:32,cat:'B',titulo:'Actos preparatorios punibles',body:`
+Homicidio y asesinato · Lesiones · Tráfico de órganos · Detenciones ilegales/secuestro · Robo, extorsión, estafa, apropiación indebida · Atentado · Desórdenes públicos (actuando en grupo)<br><br>
+* Todas las penas, inferiores en 1 o 2 grados`},
+
+{id:'33',nota:33,cat:'F',tags:['D'],titulo:'Plazos del Tema 26 (LO 7/2021 – LO 3/2018)',body:`
+<b>Faltas administrativas:</b> inmediato<br>
+<b>Solicitud del interesado:</b> inmediato (máx. 1 mes)<br>
+<b>Uso videocámaras móviles:</b> 24H<br>
+<b>Delitos penales:</b> 72H<br>
+<b>Dudas sobre identidad del solicitante:</b> 10 días<br>
+<b>Admisión/inadmisión de reclamación ante la AEPD:</b> 3 meses<br>
+<b>Solicitudes repetitivas:</b><br>
+<span class="ind1">LO 7/2021: 3 sobre el mismo supuesto en 6H</span>
+<span class="ind1">LO 3/2018: +1 en 6 meses</span>`},
+
+{id:'34',nota:34,cat:'D',titulo:'Infracciones y sanciones por ley',body:`
+<b>LO 4/2015 (Seguridad Ciudadana):</b> Infracciones Leve 6M / Grave 1A / Muy Grave 2A — Sanción Leve 1A / Grave 2A / Muy Grave 3A<br>
+<b>LO 4/2000 (Extranjería):</b> Infracciones Leve 6M / Grave 2A / Muy Grave 3A — Sanción Leve 1A / Grave 2A / Muy Grave 5A<br>
+<b>Ley 5/2014 (Seguridad Privada):</b> Infracciones Leve 6M / Grave 1A / Muy Grave 2A — Sanción Leve 1A / Grave 2A / Muy Grave 4A<br>
+<b>LO 4/2010 (Régimen CNP):</b> Infracciones y sanción Leve 1 Mes / Grave 2A / Muy Grave 3A<br>
+<b>LO 3/2018 (Protección de Datos):</b> Infracciones y sanción Leve 1A / Grave 2A / Muy Grave 3A<br>
+<b>LO 7/2021 (Protección de Datos):</b> Infracciones Leve 6M / Grave 2A / Muy Grave 3A — Sanción Leve 1A / Grave 2A / Muy Grave 3A`},
+
+{id:'35',nota:35,cat:'I',titulo:'DUDH y Consejo de Derechos Humanos',body:`
+<b>Declaración Universal de los DDHH:</b> 1 preámbulo + 30 artículos<br><br>
+<b>→ Órganos de control</b><br>
+<b>Consejo de Derechos Humanos</b> — promociona y protege los DDHH<br>
+<span class="ind1">Sede: Ginebra</span>
+<span class="ind1">Reunión: 3 periodos de 10 semanas</span>
+<span class="ind1">Miembros: 47, elegidos por 3 años (13 África, 13 Asia, 7 Europa Occ., 6 Europa Or., 8 América Latina)</span><br>
+Pertenece a la Carta Internacional de los DH — Mesa: 1 presidente + 4 vicepresidentes (elegidos cada año) — presenta informe anual a la ONU`},
+
+{id:'36a',nota:36,cat:'B',titulo:'Atentado agravado por lanzamiento de objetos',original:'Resaltado en amarillo en el original.',body:`El lanzamiento de objetos peligrosos contra agentes de la autoridad no es tentativa, aunque no acierte — se considera <b>atentado agravado</b>.`},
+
+{id:'36b',nota:36,cat:'J',titulo:'Estadios de Kohlberg',body:`
+<b>1. Preconvencional</b><br>
+<span class="ind1">Estadio 1 — Obediencia y castigo (miedo)</span>
+<span class="ind1">Estadio 2 — Favorecer los propios intereses</span>
+<b>2. Convencional</b><br>
+<span class="ind1">Estadio 1 — Expectativas interpersonales</span>
+<span class="ind1">Estadio 2 — Normas sociales</span>
+<b>3. Postconvencional</b><br>
+<span class="ind1">Estadio 1 — Derechos prioritarios</span>
+<span class="ind1">Estadio 2 — Principios éticos</span>`},
+
+{id:'36c',nota:36,cat:'B',titulo:'Personas jurídicas: sin responsabilidad',original:'Resaltado en amarillo en el original.',body:`Las personas jurídicas <b>NO</b> tienen responsabilidad penal en el delito de aborto.`},
+
+{id:'37',nota:37,cat:'D',tags:['A'],titulo:'Órganos superiores y directivos: creación y nombramiento',body:`
+<b>Órganos superiores:</b><br>
+<span class="ind1"><b>Ministros</b> — Crea: RD del Presidente del Gobierno / Nombra: el Rey a propuesta del Presidente</span>
+<span class="ind1"><b>Secretarios de Estado</b> — Crea: RD del Presidente del Gobierno / Nombra: RD del Consejo de Ministros a propuesta del Presidente o Ministerio del que dependen</span><br>
+<b>Órganos directivos:</b><br>
+<span class="ind1">Creación — RD del Consejo de Ministros, a iniciativa del Ministro interesado y a propuesta del Ministerio de Transformación y Función Pública</span>
+<span class="ind1"><b>Subsecretario</b> — RD del Consejo de Ministros a propuesta del titular del Ministerio (obligatorio)</span>
+<span class="ind1"><b>Secretario General</b> — RD del Consejo de Ministros a propuesta del titular del Ministerio o Presidente</span>
+<span class="ind1"><b>Secretario General Técnico</b> (obligatorio) — RD del Consejo de Ministros a propuesta del titular del Ministerio</span>
+<span class="ind1"><b>Director General</b> — RD del Consejo de Ministros a propuesta del titular del Ministerio o del Presidente</span>
+<span class="ind1"><b>Subdirector General</b> — el Ministro, Secretario de Estado o Subsecretario directamente</span>`},
+
+{id:'38a',nota:38,cat:'B',titulo:'Procedimientos penales según la pena',body:`
+<b>Procedimiento ordinario:</b> +9 años — Instrucción: Sumario<br>
+<b>Procedimiento abreviado:</b> hasta 9 años — Instrucción: Diligencias previas<br>
+<b>Procedimiento de enjuiciamiento rápido:</b> hasta 5 años — Instrucción: Diligencias urgentes`},
+
+{id:'38b',nota:38,cat:'I',titulo:'Consejo de Europa, TEDH, CPT y Consejo DDHH (46 vs 47)',body:`
+Consejo de Europa — <b>46</b><br>
+Tribunal Europeo de Derechos Humanos (TEDH) — <b>46</b><br>
+Comité Europeo para la Prevención de la Tortura (CPT) — <b>46</b><br>
+Consejo de Derechos Humanos (ONU) — <b>47</b><br><br>
+<b>Regla:</b> si es de la UE/Europa → 46 · si es internacional (ONU) → 47`},
+
+{id:'39',nota:39,cat:'A',titulo:'Tipos de mayoría parlamentaria',body:`
+<b>Mayoría simple</b> → leyes ordinarias, trámite sencillo<br>
+<b>Mayoría absoluta</b> → leyes orgánicas, veto, moción de censura (caída del gobierno)<br>
+<b>Mayoría 3/5</b> → elección de jueces (vocales CGPJ, magistrados TC) o reforma de artículos "normales" de la Constitución<br>
+<b>Mayoría 2/3</b> → cuestiones relativas a la Corona o reforma agravada de la Constitución`},
+
+{id:'40',nota:40,cat:'A',titulo:'Sistemas de votación en las Cortes',body:`
+<b>Sesión conjunta:</b> Corona / cuestiones no legislativas del Título II<br>
+<b>Solo Congreso:</b> control político del Gobierno<br>
+<b>Primero Senado, después Congreso:</b> asuntos territoriales (CCAA) — comisiones mixtas si hay desacuerdo<br>
+<b>Primero Congreso, después Senado:</b> elaboración de leyes comunes → Senado: 2 meses para enmendar/vetar → Congreso tiene la última palabra<br>
+<b>Votación simultánea:</b> reforma de la CE → 2/3 · elección de jueces → 3/5`},
+
+{id:'41',nota:41,cat:'F',titulo:'Principios y medidas de investigación tecnológica',body:`
+<b>Principios rectores:</b> especialidad, idoneidad, excepcionalidad, necesidad, proporcionalidad<br><br>
+<b>Medidas:</b><br>
+<span class="ind1">1. Interceptación de comunicaciones telefónicas — hasta 3M, prorrogable hasta 18M</span>
+<span class="ind1">2. Captación de comunicaciones orales</span>
+<span class="ind1">3. Apertura de correspondencia, telegrafía — hasta 3M, prorrogables hasta 18M</span>
+<span class="ind1">4. Dispositivos técnicos de seguimiento y localización — hasta 3M, prorrogables hasta 18M</span>
+<span class="ind1">5. Registro y almacenamiento masivo de datos</span>
+<span class="ind1">6. Registro remoto de equipos informáticos — máx. 1M, prorrogable hasta 3M</span>`},
+
+{id:'42',nota:42,cat:'G',titulo:'PNPIC, PES, PSO, PPE y PAO',body:`
+<b>PNPIC</b> — Elabora: MIR a través SES · Aprueba: SES · Registra/Actualiza: CNPIC · Revisa: SES<br>
+<b>PES</b> — Elabora: Grupo de Trabajo · Aprueba: la Comisión (12M) · Registra: CNPIC · Revisa/Actualiza: cada 2 años, Ministerios y Organismos<br>
+<b>PSO</b> (documentos estratégicos) — Elabora: O.P. (6M) · Registro: CNPIC · Aprueba: SES · Revisa: OC — Aprueba: CNPIC (2 años) · Actualiza: O.C.<br>
+<b>PPE</b> (doc. operativo, medidas ya tomadas) — Elabora: OC (4M) · Aprueba: SES · Registra: Del. Gob. · Revisa/Actualiza: OC, aprobado por el Delegado del Gobierno<br>
+<b>PAO</b> (doc. operativo, medidas a tomar por AAPP) — Elabora: Policía · Aprueba: SES · Registra: Del. Gob. · Revisa/Actualiza: Policía`},
+
+{id:'43a',nota:43,cat:'A',titulo:'Incompatibilidades, disolución y Defensor del Pueblo',body:`
+No se puede ser Diputado y Senador simultáneamente<br>
+Se prohíbe acumular acta de Asamblea de CCAA con la de Diputado — para Senadores: sí es posible<br>
+El Presidente de una CCAA no puede ser Diputado (es miembro de la Asamblea)<br><br>
+<b>Defensor del Pueblo:</b> elegido por las Cortes Generales a propuesta de la Comisión Mixta Congreso-Senado<br><br>
+La disolución de las Cámaras la decreta el <b>Rey</b>`},
+
+{id:'43b',nota:43,cat:'H',titulo:'Tribunal de Justicia vs Tribunal General (UE)',body:`
+Las cuestiones <b>prejudiciales</b> planteadas por tribunales nacionales las resuelve el <b>Tribunal de Justicia</b><br>
+El <b>Tribunal General</b> resuelve cuestiones entre particulares`},
+
+{id:'44a',nota:44,cat:'H',titulo:'Mayoría cualificada en el Consejo de la UE',body:`Mayoría cualificada en el Consejo de la UE → <b>55% – 65%</b>`},
+
+{id:'44b',nota:44,cat:'G',titulo:'Interpol, Delegado del Gobierno y Relaciones Internacionales',body:`
+<b>Notificaciones Interpol:</b><br>
+<span class="ind1"><b>Naranja</b> — acontecimiento, persona u objeto que suponga grave peligro inminente para la Seguridad Pública</span>
+<span class="ind1"><b>Morada</b> — Modus operandi</span>
+<span class="ind1"><b>Azul</b> — conseguir más información de una persona</span><br>
+Delegado del Gobierno — rango de Subsecretario<br>
+Subdelegado del Gobierno — rango de Subdirector General<br><br>
+<b>Dirección General de Relaciones Internacionales:</b><br>
+<span class="ind1">SG Cooperación Internacional Policial</span>
+<span class="ind1">SG Relaciones Internacionales, Inmigración y Extranjería</span>
+<span class="ind1">SG Asuntos Europeos</span><br>
+Oficina del Policía — S. General — Div. Personal`},
+
+{id:'45a',nota:45,cat:'G',titulo:'Brigadas técnicas, Oficina de Marca y acceso a la DGP',body:`
+<b>B.I.T.</b> (Brigada Central Investigación Tecnológica) — delitos contra las personas cometidos mediante nuevas tecnologías<br>
+<b>BC Fraude Informático</b> — fraudes<br>
+<b>BSI</b> (BC. Seguridad Informática) — delitos de alta especialización, Fraude BEC<br>
+Oficina de Marca — PN — C. Técnico<br><br>
+Régimen del Personal DGP: se accede por Concurso-Oposición o Antigüedad (ascenso interno)`},
+
+{id:'45b',nota:45,cat:'E',titulo:'Clasificación de la residencia por tiempo',body:`
+<b>Residencia general (&lt;5 años):</b> orden público, seguridad, salud pública<br>
+<b>Residencia permanente (5-10 años):</b> razones graves de seguridad pública<br>
+<b>Residencia de larga duración (+10 años):</b> razones imperiosas de seguridad pública`},
+
+{id:'46a',nota:46,cat:'A',titulo:'Senadores insulares, oficina presupuestaria y referéndum',body:`
+<b>Senadores en las islas:</b> islas mayores 3 senadores · islas menores 1 senador<br>
+Oficina presupuestaria — depende directamente del Titular de la Subsecretaría del Interior<br>
+<b>Referéndum:</b> convocado por el Rey, propuesto por el Presidente del Gobierno, autorizado por las Cortes Generales<br><br>
+Regla práctica: si el enunciado dice "sanciones", es sanción`},
+
+{id:'46b',nota:46,cat:'E',titulo:'Apatridia y renovación de residencia temporal no lucrativa',body:`
+Solicitud de apatridia: 1 mes desde la entrada<br>
+Renovación de residencia temporal no lucrativa: 2 años, salvo RDL`},
+
+{id:'46c',nota:46,cat:'G',titulo:'Coordinación internacional: CCP/CCPA y UIP',body:`
+Coordinación CCP y CCPA — DGCYE<br>
+Portugal: 5 (CCPA) · Francia: 4 (CCPA)<br>
+UIP — Seguridad Ciudadana`},
+
+{id:'47',nota:47,cat:'A',titulo:'Jerarquía normativa española',body:`
+<b>Ley Orgánica:</b> derechos fundamentales y libertades públicas — mayoría absoluta del Congreso<br>
+<span class="ind1">Si afecta a las CCAA → también mayoría absoluta del Senado</span>
+<span class="ind1">Dentro de la LO: Ley de Transferencia (el Estado da facultades a las CCAA)</span>
+<b>Ley Ordinaria:</b> Leyes marco, Leyes de armonización<br>
+<b>Decreto-Ley:</b> extraordinaria y urgente necesidad<br>
+<b>Decreto Legislativo:</b> las Cortes Generales delegan en el Gobierno<br>
+<span class="ind1">Ley de Bases → Texto Articulado</span>
+<span class="ind1">Ley Ordinaria → Texto Refundido</span>`},
+
+{id:'48a',nota:48,cat:'G',titulo:'Gabinetes MIR/SES y periodicidad de auditorías',body:`
+Gabinete MIR — Director General<br>
+Gabinete SES — Subdirector General<br><br>
+Auditorías PN → cada 5 años<br>
+"Revisiones de evaluación inicial" (PN) → cada 4 años · general → cada 4 años`},
+
+{id:'48b',nota:48,cat:'J',titulo:'Rumores y aculturación',body:`
+Teoría de los rumores — Allport y Postman<br><br>
+<b>Asimilación</b> — el inmigrante pierde su identidad al incorporarse a la sociedad<br>
+<b>Aculturación</b> — igual que la asimilación, pero NO se pierde la identidad; se integran elementos<br>
+<b>Transculturación</b> — la cultura superior absorbe a la inferior`},
+
+{id:'49',nota:49,cat:'G',titulo:'SGT y el Defensor del Pueblo',body:`La SGT coordina las relaciones del Ministerio del Interior con el Defensor del Pueblo.`},
+
+{id:'50a',nota:50,cat:'A',titulo:'Plazos del BOE y estados de alarma/excepción/sitio',body:`
+Publicación en el BOE de una ley, sin fecha: <b>20 días</b><br>
+Sanción de la ley para su publicación en el BOE por el Rey: <b>15 días</b><br>
+Periodo de pago voluntario: <b>20 días</b><br><br>
+<b>Alarma:</b> declara el Gobierno mediante Decreto del Consejo de Ministros <i>[mnemotecnia: GC]</i><br>
+<b>Excepción:</b> declara el Gobierno mediante RD del Consejo de Ministros, con autorización del Congreso <i>[mnemotecnia: GC]</i><br>
+<b>Sitio:</b> declara el Congreso a propuesta exclusiva del Gobierno <i>[mnemotecnia: CG]</i>`},
+
+{id:'50b',nota:50,cat:'B',titulo:'Procedimientos penales y delitos leves',body:`
+<b>Procedimiento ordinario:</b> +9 años — Instrucción: Sumario<br>
+<b>Procedimiento abreviado:</b> hasta 9 años — Instrucción: Diligencias previas<br>
+<b>Procedimiento de enjuiciamiento rápido:</b> hasta 5 años — Instrucción: Diligencias urgentes<br>
+<b>Delitos leves:</b> instruye y enjuicia`},
+
+{id:'51',nota:51,cat:'B',titulo:'Salas de los tribunales: mnemotecnias',body:`
+<b>Tribunal Supremo (5 salas):</b> Civil, Penal, Contencioso-Administrativo, Social, Militar<br>
+<span class="ind1">Mnemotecnia C-P-C-S-M → <b>CIPECOSOMI</b></span><br>
+<b>Audiencia Nacional (4 salas):</b> Apelación, Penal (no civil), Contencioso-Administrativo, Social<br>
+<span class="ind1">Mnemotecnia A-P-C-S → <b>APECOSO</b></span><br>
+<b>Tribunal Superior de Justicia (3 salas):</b> Civil y Penal (Sala Común), Contencioso-Administrativo, Social<br>
+<span class="ind1">Mnemotecnia → <b>CICOSO</b></span>`},
+
+{id:'52a',nota:52,cat:'H',titulo:'Fuentes del derecho de la UE',body:`
+<b>Reglamento:</b> alcance general, obligatorio y directamente aplicable<br>
+<b>Directiva:</b> obliga al destinatario en cuanto al objetivo a conseguir, no en la forma ni los medios<br>
+<b>Decisión:</b> obligatoria en todos sus elementos<br>
+Recomendaciones y dictámenes: no vinculantes`},
+
+{id:'52b',nota:52,cat:'D',titulo:'Validez de licencias y compartimentos penitenciarios',body:`
+Años de validez del carnet/licencia tipo D: <b>5 años</b><br>
+Espacios donde están presos y funcionarios M1/M2 → <b>compartimentos</b>`},
+
+{id:'53a',nota:53,cat:'A',titulo:'Presidente y Gobierno en funciones: DCR y P/P',body:`
+<b>Presidente en funciones NO puede:</b><br>
+<span class="ind1"><b>D</b> — Disolver las Cortes Generales</span>
+<span class="ind1"><b>C</b> — Plantear cuestión de confianza</span>
+<span class="ind1"><b>R</b> — Convocar referéndum consultivo</span><br>
+<b>Gobierno en funciones NO puede:</b><br>
+<span class="ind1"><b>P</b> — Presupuestos Generales del Estado (PGE)</span>
+<span class="ind1"><b>P</b> — Presentar proyectos de ley a las Cortes</span>`},
+
+{id:'53b',nota:53,cat:'F',titulo:'Protección de datos de menores fallecidos',body:`En protección de datos, ante un menor fallecido se podrá actuar de oficio o a instancia de parte interesada.`},
+
+{id:'53c',nota:53,cat:'G',titulo:'Excedencia por cuidado de familiares y factor humano',body:`
+Excedencia por cuidado de familiares en el CNP → reserva del puesto: 2 años / destino: 3 años<br><br>
+Factor esencial, base, no explícito → <b>Factor Humano</b>`},
+
+{id:'54a',nota:54,cat:'B',titulo:'Fuentes de inteligencia y registros corporales',body:`
+Información procedente de imágenes e información geográfica → <b>IMINT</b><br>
+Procede de fuentes técnicas → <b>SIGINT</b><br>
+Procede de fuentes humanas → <b>HUMINT</b><br><br>
+<b>Registros corporales — principios:</b> proporcionalidad, igualdad de trato, no discriminación, injerencia mínima<br>
+Si el registro corporal es coactivo (por la fuerza): proporcionalidad, idoneidad, necesidad → mnemotecnia <b>P.I.N.</b><br>
+Se informa de las razones y se deja constancia por escrito`},
+
+{id:'54b',nota:54,cat:'G',titulo:'Oficina de Delitos de Odio',body:`Oficina de Delitos de Odio → <b>DGCYE</b>`},
+
+{id:'55a',nota:55,cat:'H',titulo:'Supervisor Europeo de Protección de Datos y pilares de Maastricht',body:`
+Supervisor Europeo de Protección de Datos: mandato de <b>5 años</b><br><br>
+<b>Pilares de Maastricht:</b><br>
+<span class="ind1">1º Pilar — Comunidades Europeas</span>
+<span class="ind1">2º Pilar — PESC</span>
+<span class="ind1">3º Pilar — JAI</span>`},
+
+{id:'55b',nota:55,cat:'I',titulo:'Subcomité para la Prevención de la Tortura',body:`
+Subcomité de prevención de la tortura — periodo de sesiones: <b>3</b><br>
+Protocolo del Convenio contra la Tortura → Preámbulo y 37 artículos<br><br>
+2001 — Contracumbre de Génova → <b>G8</b>`},
+
+{id:'55c',nota:55,cat:'C',titulo:'Derecho privado',body:`Derecho Civil y Mercantil → <b>Derecho Privado</b>`},
+
+{id:'55d',nota:55,cat:'J',titulo:'Definiciones de ciudad',body:`
+<b>Wirth</b> — cita "Heterogéneos"<br>
+<b>Ratzel</b> — cita "Grandes vías comerciales"<br>
+<b>Sorre</b> — cita "Organización social"`},
+
+{id:'55e',nota:55,cat:'L',titulo:'Datos sueltos: DGCYE, DARPA e inducción al suicidio',body:`
+Información estadística sobre la evolución de la criminalidad → <b>DGCYE</b><br>
+DARPA — Departamento de Defensa de EEUU<br><br>
+La inducción al suicidio se pena <b>más</b> que la cooperación necesaria al suicidio`},
+
+{id:'56a',nota:56,cat:'B',titulo:'Detención preventiva de adultos',body:`Detención preventiva (adultos) → estrictamente necesaria y máximo <b>72H</b>`},
+
+{id:'56b',nota:56,cat:'L',titulo:'Datos sueltos: prevención laboral, rootkit y MS-DOS',body:`
+El empresario consulta las decisiones preventivas con los representantes de los trabajadores<br>
+<b>Rootkit</b> — software malicioso de control total<br>
+<b>MS-DOS</b> — monotarea, monousuario`},
+
+{id:'56c',nota:56,cat:'A',titulo:'Administración militar, seguridad ciudadana y origen de la UE',body:`
+Dirección de la Administración Militar → <b>Gobierno</b><br>
+Proponer y ejecutar la política del Gobierno en materia de Seguridad Ciudadana → <b>MIR</b><br>
+La UE se establece formalmente en el Tratado de Maastricht`},
+
+{id:'57a',nota:57,cat:'B',titulo:'Riña tumultuaria',body:`La riña tumultuaria no constituye actos preparatorios.`},
+
+{id:'57b',nota:57,cat:'J',titulo:'Tipos de racismo',body:`
+<b>Tradicional</b> — hay jerarquía de razas<br>
+<b>Simbólico</b> — no son racistas, pero se oponen a políticas de igualdad racial<br>
+<b>Moderno</b> — las minorías amenazan los valores de la mayoría<br>
+<b>Aversivo</b> — cree honestamente en la igualdad, pero se siente incómodo<br>
+<b>Latente</b> — está ahí pero no se ve, "se encuentra dormido"<br>
+<b>Ambivalente</b> — sentimientos positivos y negativos a la vez<br>
+<b>Sutil</b> — no ataca de frente, pero actúa defendiendo valores tradicionales`},
+
+{id:'57c',nota:57,cat:'G',titulo:'Excedencia por cuidado de familiares en el CNP',body:`
+En la PN, excedencia por cuidado de familiares:<br>
+<span class="ind1">Reserva de puesto = salario (misma localidad)</span>
+<span class="ind1">Al menos 2 años</span>`},
+
+{id:'58',nota:58,cat:'J',titulo:'Pirámide de Davenport y Prusak',body:`
+1. Inteligencia<br>2. Conocimiento<br>3. Información<br>4. Dato`},
+
+{id:'59a',nota:59,cat:'D',titulo:'Recursos administrativos',body:`
+<b>Alzada:</b> se acude a un superior jerárquico → dirigido a actos que <b>NO</b> ponen fin a la vía administrativa<br>
+<b>Reposición:</b> es como pedir una revisión → dirigido a actos que <b>ponen fin</b> a la vía administrativa<br>
+<b>Revisión:</b> se solicita si hay nuevos documentos o errores → sentencias firmes o cerradas<br>
+<b>Reexamen:</b> puestos fronterizos y CIE → 2 días (solicitud) / 2 días (resolución)`},
+
+{id:'59b',nota:59,cat:'K',titulo:'Licencia de armas Tipo F: categorías',body:`
+<b>1ª categoría:</b> hasta 10 armas<br>
+<b>2ª categoría:</b> hasta 6 armas<br>
+<b>3ª categoría:</b> 1 arma corta o 1 arma larga`},
+
+{id:'60a',nota:60,cat:'L',titulo:'Antes de iniciar la conducción',body:`
+1. Altura del asiento<br>2. Inclinación del respaldo<br>3. Distancia pedales/volante<br>4. Reposacabezas<br>5. Posición del volante<br>6. Retrovisores<br>7. Cinturón`},
+
+{id:'60b',nota:60,cat:'B',titulo:'Extorsión y coacción',body:`
+<b>Extorsión:</b> acto o negocio jurídico, con ánimo de lucro<br>
+<b>Coacción:</b> impedir hacer lo que la ley no prohíbe, o compeler a hacer lo que no se quiere`},
+
+{id:'61a',nota:61,cat:'C',titulo:'Emancipación',body:`
+<b>Concesión paterna</b> — el menor la consiente, se inscribe en el Registro Civil<br>
+<b>Concesión judicial</b> — la pide el menor, edad 16 años. Se concede si:<br>
+<span class="ind1">Padre o madre (patria potestad) vive con otra persona</span>
+<span class="ind1">Padres separados</span>
+<span class="ind1">Causa que entorpezca la patria potestad</span>
+<b>Vida independiente</b> — los padres consienten, única revocable`},
+
+{id:'61b',nota:61,cat:'B',titulo:'Tribunal del Jurado',body:`El Tribunal del Jurado nunca enjuicia delitos de la Audiencia Nacional (la Audiencia Provincial sí).`},
+
+{id:'61c',nota:61,cat:'J',titulo:'Racismo sutil',body:`Racismo sutil — Pettigrew y Meertens`},
+
+{id:'61d',nota:61,cat:'G',titulo:'DAO: uniformes y colaboración policía judicial',body:`
+¿Quién autoriza los cambios de uniforme invierno-verano en la DGP? → <b>DAO</b><br>
+Funciones de las CCAA en Policía Judicial → en colaboración con las <b>FFCCSS</b>`},
+
+{id:'62a',nota:62,cat:'B',titulo:'Accidente blanco y asistencia a víctimas',body:`
+<b>Accidente blanco</b> → daños a bienes, no a personas<br><br>
+Fase de servicio de asistencia a víctimas: <b>4 fases</b>`},
+
+{id:'62b',nota:62,cat:'H',titulo:'Consejo de Europa y Tratado de París',body:`
+Consejo de Europa — se creó en <b>1949</b><br>
+<b>1951</b> — firma del Tratado de París`},
+
+{id:'62c',nota:62,cat:'F',titulo:'Plazos de resolución y caducidad (LO 7/2021 vs LO 3/2018)',body:`
+<b>LO 7/2021:</b> si no contestan en 1 mes, se entiende desestimada. Caducidad de procedimientos: 6 meses<br>
+<b>LO 3/2018:</b> reclamaciones AEPD, 3 meses para responder, silencio positivo. Caducidad de procedimientos: 12 meses`},
+
+{id:'62d',nota:62,cat:'I',titulo:'Visitas del SPT y el CPT',body:`Las visitas del SPT y el CPT → mínimo 2 personas. Aparte, máximo 5 personas, propuestas por los estados para ir a visitar.`},
+
+{id:'63a',nota:63,cat:'G',titulo:'DAO: suplencia y UPEC',body:`
+DAO — suplencia: SDG RRHH / Logística e Innovación<br>
+Depende de la <b>UPEC</b> → Área de Seguimiento, Inteligencia (Estadística Criminal) y Planificación`},
+
+{id:'63b',nota:63,cat:'H',titulo:'Tratado de Maastricht: nacimiento de la UE',body:`El Tratado de Maastricht establece formalmente la Unión Europea.`},
+
+{id:'63c',nota:63,cat:'A',titulo:'Órganos superiores del Estado: funciones',body:`
+<b>Secretario de Estado</b> → ejecuta la acción del Gobierno en un sector específico<br>
+<b>Ministro</b> → dirige la actividad administrativa<br>
+<b>Subsecretario</b> → ostenta la representación, servicios comunes<br>
+<b>SGT</b> → normativa, asistencia jurídica y publicaciones<br>
+<b>Director General</b> → gestiona áreas funcionalmente homogéneas`},
+
+{id:'64a',nota:64,cat:'F',titulo:'Reclamaciones ante la AEPD: plazos',body:`
+Reclamas a la AEPD: <b>3 meses</b><br>
+<span class="ind1">¿Se admite? — 6 meses para reconocer tus derechos</span>
+<span class="ind1">Procedimiento sancionador — 12 meses</span>`},
+
+{id:'64b',nota:64,cat:'G',tags:['D'],titulo:'Principios de promoción y provisión de puestos',body:`
+<b>Policía — Promoción (social/humana):</b> objetividad, igualdad, mérito, capacidad<br>
+<b>Policía — Provisión (destinos):</b> mérito, capacidad, antigüedad<br><br>
+<b>TREBEP:</b><br>
+<span class="ind1">Acceso/ingreso: igualdad, mérito, capacidad</span>
+<span class="ind1">Provisión de puestos: publicidad y celeridad</span>
+<span class="ind1">Interinos: igualdad, mérito, capacidad, publicidad y celeridad</span>
+<span class="ind1">Laboral temporal: igualdad, mérito, capacidad, celeridad</span>`},
+
+{id:'65a',nota:65,cat:'A',titulo:'Seguridad Pública: titularidad y ejercicio',body:`
+Exclusiva → Estado<br>Mantenida → Gobierno de la Nación<br>Ejercitada → AAPP<br>A través de → FCS`},
+
+{id:'65b',nota:65,cat:'G',titulo:'FCSE: cadena de mando',body:`
+Mando superior: <b>MIR</b><br>
+Mando ejercido: <b>SES</b><br>
+Mando directo: <b>Subdelegado/Delegado / DGP</b>`},
+
+{id:'65c',nota:65,cat:'F',titulo:'Delegado de Protección de Datos: nombramiento',body:`Tanto el encargado como el responsable del tratamiento pueden nombrar al Delegado de Protección de Datos.`},
+
+{id:'66a',nota:66,cat:'C',tags:['G'],titulo:'Registro Nacional de Asociaciones',body:`Registro Nacional de Asociaciones → depende de la <b>SGT</b>`},
+
+{id:'66b',nota:66,cat:'I',titulo:'FMI y Banco Mundial',body:`
+<b>FMI</b> — estabilidad monetaria<br>
+<b>Banco Mundial</b> — reducción de la pobreza`},
+
+{id:'66c',nota:66,cat:'G',titulo:'Fiabilidad de fuentes y escalas policiales',body:`
+Fiabilidad de la <b>fuente</b> → A, B, C, X<br>
+Fiabilidad de la <b>información</b> → 1, 2, 3, 4<br><br>
+<b>Escalas policiales:</b><br>
+<span class="ind1">Escala Superior — Dirección</span>
+<span class="ind1">Escala Ejecutiva — Mando</span>
+<span class="ind1">Escala de Subinspección — Supervisión</span>
+<span class="ind1">Escala Básica — Ejecución</span>`}
+];
+
+// ---- Notas añadidas desde la propia app (Modo "Añadir nota") ----
+// No edites a mano el contenido entre las marcas: se regenera automáticamente
+// al pulsar "Guardar cambios". Es seguro editarlo a mano si tienes cuidado con
+// la sintaxis JSON (comillas dobles, sin comas finales).
+// NOTAS_EXTRA_START
+const NOTAS_EXTRA = [
+  {
+    "id": "extra-1788170027307",
+    "nota": 67,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "Fiscal General del Estado",
+    "body": "Se elegirá de entre juristas españoles de reconocido prestigio con más de quince años de ejercicio efectivo de su profesión."
+  },
+  {
+    "id": "extra-1788170207111",
+    "nota": 68,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "¿Cuánto tiempo deberá transcurrir desde la presentación de una moción de censura hasta su votación?",
+    "body": "Cinco días."
+  },
+  {
+    "id": "extra-1788171133641",
+    "nota": 69,
+    "cat": "A",
+    "titulo": "EL SECTOR PÚBLICO INSTITUCIONAL",
+    "body": "a) Los organismos públicos vinculados o dependientes de la Administración General del Estado, los cuales se clasifican en:<br><br>Organismos autónomos.<br>Entidades públicas empresariales.<br>Agencias estatales.<br><br>b) Las autoridades administrativas independientes.<br>c) Las sociedades mercantiles estatales.<br>d) Los consorcios.<br>e) Las fundaciones del sector público.<br>f) Los fondos sin personalidad jurídica.<br>g) Las universidades públicas no transferidas."
+  },
+  {
+    "id": "extra-1788171900114",
+    "nota": 70,
+    "cat": "A",
+    "titulo": "MEDIDAS PRIVATIVAS DE LIBERTAD",
+    "body": "Son medidas privativas de libertad:<br><br>1.ª El internamiento en centro psiquiátrico.<br>2.ª El internamiento en centro de deshabituación.<br>3.ª El internamiento en centro educativo especial.<br><br>Son medidas no privativas de libertad:<br><br>1.ª) La inhabilitación profesional.<br>2.ª) La expulsión del territorio nacional de extranjeros no residentes legalmente en España.<br>3.ª) La libertad vigilada.<br>4.ª) La custodia familiar. El sometido a esta medida quedará sujeto al cuidado y vigilancia del familiar que se designe y que acepte la custodia, quien la ejercerá en relación con el Juez de Vigilancia Penitenciaria y sin menoscabo de las actividades escolares o laborales del custodiado.<br>5.ª) La privación del derecho a conducir vehículos a motor y ciclomotores.<br>6.ª) La privación del derecho a la tenencia y porte de armas."
+  },
+  {
+    "id": "extra-1788382712556",
+    "nota": 71,
+    "cat": "L",
+    "tags": [
+      "L"
+    ],
+    "titulo": "Fuetes del derecho",
+    "body": "FUENTE DEL DERECHO:<br>-&gt;DIRECTAS<br>●\tLEY → PRIMARIA (TRATADO PUBLICADO TAMBIÉN)<br>●\tCOSTUMBRE - SECUNDARIA<br>●\tPPIOS GENERALES - SECUNDARIA"
+  },
+  {
+    "id": "extra-1788382897433",
+    "nota": 72,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "●\tDECLARACIÓN DE NACIMIENTO: 72 H<br>○\t→ FUERA DE HOSPITAL: 10 DÍAS<br>○\t→ CAUSA JUSTIFICADA: 30 DÍAS<br>------------------------------------------------------------------<br>●\tCAPACIDAD JURÍDICA: ES LA PRIMERA ALFABÉTICAMENTE → NADA MÁS NACER<br>○\t① Jurídica ② Obrar<br>●\tCAP. OBRAR: +18<br>○\t-18 CAP. LIMITADA<br>------------------------------------------------------------------<br>●\tDOMICILIO REAL → EL HABITUAL → TU CASA<br>●\tDOM. LEGAL / NECESARIO → EL FAMILIAR<br>○\tEj. HIJO QUE VIVE CON SUS PADRES<br>●\tEFECTIVO: DISTINTO AL REAL"
+  },
+  {
+    "id": "extra-1788383018442",
+    "nota": 73,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "MÍNIMO SENADORES GP PARLAMENTARIO:<br>●\t10 (SENADO)<br>●\t15 (CONGRESO)<br><br>SEGURIDAD PRIVADA<br>●\tDESTRUCCIÓN DE IMÁGENES Y SONIDOS DE INVESTIGACIONES → 3 [años]<br>●\tINFORMES D. PRIVADO DEBE CONSERVARLO → 3 [años]<br>●\tNO PODRÁN EJERCER FUNCIONES DE DIRECCIÓN/ADMINISTRACIÓN EN CENTROS DE FORMACIÓN FCS → 2 [años]<br>●\tFCS PODRÁ EJERCER FUNCIONES DE SP → 2 [años]<br>●\tINTROMISIÓN ILEGÍTIMA → 5 [años]<br>●\tREPRESENT[ACIÓN] LEGAL → 10 [años]"
+  },
+  {
+    "id": "extra-1788383260038",
+    "nota": 74,
+    "cat": "A",
+    "titulo": "VARIOS",
+    "body": "●\tPRÁCTICAS TIRO<br>○\tVIGILANTE: 6M<br>○\tESCOLTA: 3M<br><br>Si el ATENTADO es contra la AUTORIDAD, SE AGRAVA.<br><br>●\tVISADO A - AEROPORTUARIO<br>●\tVISADO B - TRÁNSITO<br>●\tVISADO C - CORTA DURACIÓN (FRONTERA)<br>●\tVISADO D - LARGA DURACIÓN<br><br>AMENAZA LEVE A MUJER O PAREJA -&gt; PRISION"
+  },
+  {
+    "id": "extra-1788383311198",
+    "nota": 75,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "PNR-SES<br>IPv4 - 32 BITS<br>AGRUPACIÓN DE MUNICIPIOS - ESTATUTOS<br><br>ARITMÉTICO - ALIMENTO (MALTHUS)<br>(Teoría malthusiana: la población crece geométricamente, mientras que los alimentos lo hacen aritméticamente)<br><br>Movimientos ANTIGLOBALIZACIÓN:<br>●\tAZUL: VIOLENTO, ANTIFA<br>●\tAMARILLO: MANIFEST[ACIONES] NO VIOLENT[AS]<br><br>COMISIÓN UE - INICIATIVA LEGISLATIVA"
+  },
+  {
+    "id": "extra-1788383339402",
+    "nota": 76,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "Cuando un TRIBUNAL PLANTEE CUESTIÓN DE INCONSTITUCIONALIDAD → NUNCA TENDRÁ EFECTOS SUSPENSIVOS.<br><br>BCI → TRATADO DE ROMA<br><br>INTOXICACIÓN PLENA - EXIMENTE<br><br>BIOLÓGICA → FARMACODINÁMICA<br><br>MIEMBROS DE MISMA NACIONALIDAD DEL SPT → 1<br><br>●\tPERSONAL SP → PERSONA FÍSICA [QUE] DESARROLLA FUNCIONES DE SP<br>●\tPERSONAL ACREDITADO → PROF[ESIONALES], INGEN[IEROS] Y TÉCNICOS"
+  },
+  {
+    "id": "extra-1788383376625",
+    "nota": 77,
+    "cat": "L",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "MEMORIA RAM APILADA EN 3D, MUCHO ANCHO DE BANDA: HBM<br><br>●\tEFECTO HALO: AURA +<br>●\tEFECTO DIABLO: AURA -<br>●\tEFECTO PIGMALIÓN: EXPECTATIVAS + DE LOS DEMÁS TE IMPULSAN<br><br>PRL - CALIFICACIÓN DEL RIESGO<br>→ PROBABILIDAD Y SEVERIDAD<br><br>MIDE EL SIGNIFICADO AFECTIVO → DIFERENCIAL SEMÁNTICO<br>DGP:<br>●\tFALTA DE ASEO: LEVE<br>●\tBEBER Y DROGAS DURANTE EL SERVICIO: MUY GRAVE<br>●\tNO UNIFORME CUANDO SEA PRECEPTIVO → GRAVE"
+  },
+  {
+    "id": "extra-1788383407456",
+    "nota": 78,
+    "cat": "L",
+    "titulo": "VARIOS",
+    "body": "VICTIMIZACIÓN DE JUECES: → QUINTO NIVEL<br>(nivel 5 = victimización vicaria: funcionarios de la Administración de Justicia)<br><br>POLICÍA SE SINDICA FUERA DE HORARIO Y PREVIA AUTORIZ[ACIÓN]<br>(reuniones sindicales fuera del horario laboral, sin perturbar el servicio y con autorización previa del Jefe de la dependencia)"
+  },
+  {
+    "id": "extra-1788539253993",
+    "nota": 79,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "ORGANIGRAMA MIR",
+    "body": "MINISTERIO INTERIOR.<br>   MANDO SUPERIOR y Dirección y coord FCSE.<br>GABINETE (MIR): (DG)<br>   Director (DG) + 5 asesores (MAX)(SG)<br>   PALABRAS CLAVE:<br>     -PROTOCOLO Y RELACIONES<br>     -PERSONAL CON ASESORAMIENTO CIENTIF ]<br>OFICINA DE COMUNICACIÓN: (SG)<br>     -WEB DEL MINISTERIO<br>     -PORTAVOS, RELACIONES INFO y PUBLICIDAD."
+  },
+  {
+    "id": "extra-1788539573812",
+    "nota": 80,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "ORGANIGRAMA MIR",
+    "body": "SES:<br>    -ADSCRITO: GIESE: COMPRA DE EDIF y ARMAS (Presidente Titular del SES)<br>    -DIRIGE Y COORDINA<br>    -PNR<br>    -ESPECIALMENTE<br>    -SNPIC<br>     -Ejerce MANDO FFCCSSE.<br>     -CCPA (DIRIGE Y COORD)<br>     -COORDINA COMPETENCIAS DEL/SUBD.<br><br>GABINETE DEL SES<br>    Director y MAX 3 ASESORES (SG todos)<br>    EJERCE FUNC DE RELATORIA NAC. CONTRA TRATA<br><br>DEPENDEN DEL SES Y COORD POR GABINETE:<br><br>    -SGPGIMS (GESTIONA y PLANIF. INFRAESTR).<br>    -SGSICS<br>         -EULISA y SIRDEE y SISTEMA SHENGEN<br>         -DIRIGE CETSE (IDENT y NEUTRALIZA DRONES)<br>         -MANTIENE LA WEB (INTRANET) (DOMINIO)<br>DG. RELACIONES INTERNAC.<br>         -FRONTEX<br>         -NCC y NFPOC."
+  },
+  {
+    "id": "extra-1788539910818",
+    "nota": 81,
+    "cat": "A",
+    "titulo": "ORGANIGRAMA MIR",
+    "body": "DIRECCCIÓN G. COOD Y ESTUDIOS.<br><br>   OBSERVATORIO CIBERCRIMINALIDAD.<br>   ESTADISTICA CRIMINALIDAD.<br>   UNIVERSIDAD • CNPIC • SVIOGEN<br>   CEPOL • ON DELITO ODIO • DESAPARECIDOS<br>   OCC (COMO CANAL CSIRT↔SES)<br>   CCPA (COORDINA) • ONVIOSEX<br>   CPIC • OTAN/EU/ESA.<br><br>IPSS<br><br>   PROPONE AL SES PLANIF DE LA ACTIV. INSPECTORA.<br>   PRL<br>   CALIDAD (QUEJAS CIUDADANOS)<br>   CONTROLA PLANES ACTUACIÓN FFCCSS<br>   DEONTOLOGIA<br>   OFICINA GARANTIAS DUDH.<br><br>CITCO <br>   DESTRUCCIÓN DROGAS • COORD EMPACT<br>   UNECI • ACTUACIÓN CONJUNTA FFCCSS • DELINC. ORGANTZ<br>   ONIP • INFORM ANUAL DE AMENAZAS • TERRORISMO<br>   PIU • ESTADISTICA (QUE NO SEA CRIMINALIDAD)<br>   TEPOL • PTO FOCAL TRATA • PTO NAL (FOCAS A CIT(R)CO) →   O.R.A"
+  },
+  {
+    "id": "extra-1788540074713",
+    "nota": 82,
+    "cat": "A",
+    "titulo": "ORGANIGRAMA MIR",
+    "body": "SUBSECRET INTERIOR<br><br>ADSCRITO ABOGACÍA DEL ESTADO INTERV DELEGADA DE AGE.<br>SGT:  → ADSCRITO: CIPAE<br>   QUEJA DEPARTAMENTO.<br>   ARCHIVISTICA Y DOCUMENT.<br>   OF. PRESUP DEPENDE DIRECT⁠' DE LA SUBSECRET.<br>   PRESIDE LA CIAR → DG Protec. INTERN<br>   VENTANILLA ÚNICA (SG APOYO VICTIMAS TERRORISM)<br><br>SECRET. GENERAL PROTECCIÓN CIVIL Y EMERGENCIAS.<br>    DEPENDE DIRECTAMENTE → DIV. TECNOLOGIA. DIRECC GENERA PROTEC. CIVIL Y EMERG.<br>    SG. ANTICIPACION Y PREP (ESCUELA DE P. CIVIL)<br>    SG PLANIF Y GESTION EMERG. (CEIESE) = (DIRIGE CENEM)<br>    SG. RESILIENCIA Y RECUPE."
+  },
+  {
+    "id": "extra-1788540271328",
+    "nota": 83,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "ORGANIZACIÓN TERRITORIAL DGP",
+    "body": "DGP.<br><br>SUPLENCIA DEL DGP → DAO<br><br>RPT - DOTD, DCI, D.DOCUMENTACIÓN<br><br>JUNTA DE GOB: ASIST Y COLAB <br>   PRESI: DGP <br>   VICE: DAO<br>   SECRET: J.DIV DE PERSONAL <br><br>CONSEJO ASESOR: (PERMANENTE) ASESORA, REALIZA INF Y ESTUDIOS. <br>   PRESI: DGP <br>   SECRET: G.TÉCNICO.<br><br>JSP → 20 -- COM.PROVINCIAL → 44 ---C.LOCAL → 126 C.DISTRITO → 63---C.ZONAL → SEGUN NECESIDAD.<br><br>JSP - TIENE UN GABINETE Y SECRET GENERAL SI HAY VARIAS PROVINCIAS TAMBIEN CREA SI ES NECESARIO BRIGADAS REGIONALES <br>NOMBRA: MI x LIBRE ELECCIÓN RANGO → COMISARIO P.PAL"
+  },
+  {
+    "id": "extra-1788540425348",
+    "nota": 84,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "ORGANIZACION TERRITORIAL DGP",
+    "body": "UCOT → DEPENDE DE JSP. → JEFE: JRO (ESTE SUPLE JSP SI ES NECESARIO)<br>    -COORD LAS BRIGADAS REG <br>  → ADSCRITA: UTI<br><br>COMISARIAS PROVINCIALES<br>    -UCOP: PUEDE EXISTIR O NO → JEFE: JPO <br>     Según El Catálogo<br>    -UTO.<br>    -SECRET GENERAL.<br>     -LA PROVINCIA SEDE DEL JSP PUEDE SER DIRECT ASUMIDA x <br><br>EL COMISARIA LOCAL<br>   \"LA RIOJA (CCAA) NO TIENE.\"<br>   CCPA: FR 4 PT 5              CCP: TANGER 1 ALGECIRA 1. <br><br>UD EXTRANJERIA: FUNCIONAL: CGEYF <br>                     ORGÁNICA: BG PROV. <br>UD DOCUMENTACIÓN: FUNCIONAL: D.DOC <br>                         ORGANIC: JSP/COMISARIA"
+  },
+  {
+    "id": "extra-1788540445555",
+    "nota": 85,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "RECURSO DE AMPARO<br><br>CONTRA:<br><br>EJECUTIVO: 20 DÍAS<br>JUDICIAL: 30 DÍAS<br>LEGISLATIVO: 3 MESES<br><br>ORDEN ALFABÉTICO<br><br>〜〜〜〜〜〜〜〜〜〜〜〜<br><br>PROCEDIMIENTO x FALTAS MUY GRAVES Y GRAVES (RÉGIMEN DISCIPLINARIO)<br><br>INSTRUCCIÓN: 15 DÍAS RESTO DE PLAZOS: 10 DÍAS (DURACIÓN MAX PROCEDIM. 6M)<br>SI ES URGENTE TODOS LOS PLAZOS A LA MITAD EXCEPTO ALEGACIONES. (10 DÍAS)"
+  },
+  {
+    "id": "extra-1788540520015",
+    "nota": 86,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "VARIOS",
+    "body": "SI EL FUNCIONARIO POLICÍA EN SEGUNDA ACTIVIDAD → CON DESTINO (RÉGIMEN CNP) → SIN DESTINO (RÉGIMEN Función pública)<br>------------------------------------------------------------------<br><br>POLICÍA - NOMBRA EL SES POLICÍA ALUMNO - DGP.<br>------------------------------------------------------------------<br><br>FUNCIONES PROPIAS DE FCS (CCAA)<br>    TODAS EN LAS QUE SE DICE CCAA<br><br>EN COLABORACIÓN:<br>   VELAR x LEYES DEL ESTADO<br>   PARTICIPAR FUNC. P. JUDICIAL<br>   VIGILAR ESPACIOS PÚBLICOS...<br><br>SIMULTÁNEA:<br>   RESOLUCIÓN AMISTOSA CONFLICTOS P.V.<br>   AUX EN CATÁSTROFE<br>   CONSERV NATURALEZA"
+  },
+  {
+    "id": "extra-1788540599139",
+    "nota": 87,
+    "cat": "A",
+    "titulo": "VARIOS",
+    "body": "PRESTADORES DE SERV. SP: 1. EMPRESAS, 2. DESP. DET. 3. PERSONAL HABILITADO<br>EMPRESA de SP: PERSONA FÍSICA O JURÍDICA, PRIVADA, AUTORIZADA PARA PRESTAR SERVICIOS.<br>PERSONAL DE SP: PERSONA FÍSICA QUE DESARROLLA FUNCIONES de SP, HABIENDO OBTENIDO LA CORRESP. HABILITACIÓN.<br>PERSONAL ACREDITADO: PROFES CUG Y TÉCNICOS<br>--------------------------------------------------------------<br>SP Actitudes: ÁMBITOS <br>SP SERVICIOS: ACCIONES <br>SP FUNCIONES: FACULTADES <br>SP MEDIDAS: DISPOSICIONES.<br>--------------------------------------------------------------<br>Accidente de trabajo: toda lesión CORPORAL que sufra con ocasión del trabajo.<br>Accidente en Blanco: Accidentes sin lesiones en trabajadores pero sí daños materi.<br>Enfermedad profesional: son las contraídas a cuenta del trabajo x c. propia o ajena (DEBE ESTAR RECOGIDA EN EL CUADRO)<br><br>INCAPACIDAD PERMANENTE<br>   PARCIAL: MENOS DE 33%.<br>   TOTAL: (DE DICHA PROFESIÓN)<br>   ABSOLUTA: (NINGUNA PROFESIÓN)<br>   GRAN INVALIDEZ: ADEMÁS NECESITA ASISTENCIA."
+  },
+  {
+    "id": "extra-1788603509130",
+    "nota": 88,
+    "cat": "A",
+    "tags": [
+      "L"
+    ],
+    "titulo": "Principio de actuacion FCS",
+    "body": "Cooperación recíproca<br>Coordinación orgánica."
+  }
+];
+// NOTAS_EXTRA_END
+P.push(...NOTAS_EXTRA);
+
+// ---- render ----
+const board = document.getElementById('board');
+const chipsEl = document.getElementById('chips');
+const searchEl = document.getElementById('search');
+let activeCats = new Set(Object.keys(CATS)); // todas activas por defecto
+
+function allTags(p){ return [p.cat, ...(p.tags||[])]; }
+
+function snippet(html){
+  const div = document.createElement('div');
+  div.innerHTML = html.replace(/<br\s*\/?>/g,' ').replace(/<[^>]+>/g,'');
+  return div.textContent.replace(/\s+/g,' ').trim();
+}
+
+function escapeAttr(str){
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
+}
+
+// Vibración corta al confirmar una acción decisiva (marcar tarjeta, responder
+// test). Se ignora sin más en navegadores/dispositivos que no la soportan.
+function haptic(pattern){
+  try{ if(navigator.vibrate) navigator.vibrate(pattern); }catch(e){}
+}
+
+// Bloquea el scroll de fondo mientras hay una capa (modal/repaso/test/
+// formulario) abierta, para que iOS Safari no deje "rebotar" la página de
+// detrás por debajo de la capa fija. Con contador por si alguna vez hay
+// más de una abierta a la vez.
+let __scrollLockCount = 0;
+function lockScroll(){
+  __scrollLockCount++;
+  document.documentElement.classList.add('scroll-locked');
+}
+function unlockScroll(){
+  __scrollLockCount = Math.max(0, __scrollLockCount - 1);
+  if(__scrollLockCount === 0) document.documentElement.classList.remove('scroll-locked');
+}
+
+// Delegación de eventos: un único listener en el contenedor de chips en vez de
+// N listeners individuales. Menos memoria, menos trabajo al reconstruir el DOM.
+chipsEl.addEventListener('click', (e) => {
+  const chip = e.target.closest('.chip');
+  if(!chip) return;
+  if(chip.classList.contains('chip-all')){
+    activeCats = new Set(Object.keys(CATS));
+  } else {
+    const key = chip.dataset.cat;
+    if(activeCats.has(key) && activeCats.size === 1){
+      activeCats = new Set(Object.keys(CATS));
+    } else if(activeCats.size === Object.keys(CATS).length){
+      activeCats = new Set([key]);
+    } else if(activeCats.has(key)){
+      activeCats.delete(key);
+    } else {
+      activeCats.add(key);
+    }
+  }
+  syncChips(); render();
+}, { passive: true });
+
+function buildChips(){
+  // DocumentFragment: todas las inserciones se preparan fuera del DOM vivo
+  // y se vuelcan en una sola mutación -> un único reflow/repaint.
+  // Se usan <button> (no <div>) para que las categorías sean accesibles por
+  // teclado y lector de pantalla sin código extra: el navegador ya gestiona
+  // el foco y la activación con Enter/Espacio.
+  const frag = document.createDocumentFragment();
+
+  const allChip = document.createElement('button');
+  allChip.type = 'button';
+  allChip.className = 'chip chip-all active';
+  allChip.setAttribute('aria-pressed', 'true');
+  allChip.textContent = 'Todas';
+  frag.appendChild(allChip);
+
+  Object.entries(CATS).forEach(([key, cfg]) => {
+    const chip = document.createElement('button');
+    chip.type = 'button';
+    chip.className = 'chip active';
+    chip.setAttribute('aria-pressed', 'true');
+    chip.style.setProperty('--c', cfg.c);
+    chip.style.setProperty('--ct', cfg.ct);
+    chip.dataset.cat = key;
+    const count = P.filter(p => allTags(p).includes(key)).length;
+    chip.innerHTML = `<span class="dot" style="background:${cfg.c}"></span>${cfg.label} <span style="opacity:.6">(${count})</span>`;
+    frag.appendChild(chip);
+  });
+
+  requestAnimationFrame(() => {
+    chipsEl.innerHTML = '';
+    chipsEl.appendChild(frag);
+  });
+}
+function syncChips(){
+  document.querySelectorAll('.chip').forEach(c=>{
+    const isActive = c.classList.contains('chip-all')
+      ? activeCats.size === Object.keys(CATS).length
+      : activeCats.has(c.dataset.cat);
+    c.classList.toggle('active', isActive);
+    c.setAttribute('aria-pressed', String(isActive));
+  });
+}
+
+function matchesSearch(p, q){
+  if(!q) return true;
+  q = q.toLowerCase();
+  if(String(p.nota).includes(q)) return true;
+  if(p.titulo.toLowerCase().includes(q)) return true;
+  if(snippet(p.body).toLowerCase().includes(q)) return true;
+  return false;
+}
+
+// Mapa id->nota para que el listener delegado del tablero resuelva el post-it
+// pulsado en O(1) sin recorrer el array ni cerrar un closure por tarjeta.
+const P_BY_ID = new Map();
+P.forEach(p => P_BY_ID.set(String(p.id), p));
+
+// Delegación de eventos: un único listener vive en #board para siempre.
+// Sustituye a los N `card.onclick` que antes se creaban y destruían en cada
+// render() (potencial fuga de listeners en sesiones largas con 300+ notas).
+board.addEventListener('click', (e) => {
+  const card = e.target.closest('.postit');
+  if(!card || !card.dataset.id) return;
+  const p = P_BY_ID.get(card.dataset.id);
+  if(p) openModal(p);
+});
+// Las tarjetas llevan role="button" + tabindex: con el teclado se abren
+// igual que al tocarlas (Enter o Espacio).
+board.addEventListener('keydown', (e) => {
+  if(e.key !== 'Enter' && e.key !== ' ') return;
+  const card = e.target.closest('.postit');
+  if(!card || !card.dataset.id) return;
+  e.preventDefault();
+  const p = P_BY_ID.get(card.dataset.id);
+  if(p) openModal(p);
+});
+
+function render(){
+  const q = searchEl.value.trim();
+  const frag = document.createDocumentFragment();
+  let shown = 0;
+  P.forEach((p, i) => {
+    const tagsMatch = allTags(p).some(t => activeCats.has(t));
+    if(!tagsMatch || !matchesSearch(p, q)) return;
+    shown++;
+    const cfg = CATS[p.cat];
+    const card = document.createElement('div');
+    card.className = 'postit';
+    card.dataset.id = p.id;
+    card.setAttribute('role', 'button');
+    card.tabIndex = 0;
+    card.setAttribute('aria-label', `Nota ${p.nota}: ${escapeAttr(p.titulo)}`);
+    card.style.setProperty('--c', cfg.c);
+    card.style.setProperty('--ct', cfg.ct);
+    const rot = ((i*37)%9 - 4);
+    card.style.setProperty('--rot', rot+'deg');
+    const isMastered = getProgress()[p.id]?.dominado;
+    card.innerHTML = `
+      <div class="pin"></div>
+      ${isMastered? '<div class="mastered-badge" title="Dominado">✓</div>' : ''}
+      <div class="pit-head"><span>Nota ${p.nota}</span></div>
+      <div class="pit-title">${p.titulo}</div>
+      <div class="pit-snippet">${snippet(p.body)}</div>
+      <div class="pit-cat">${cfg.label}${p.tags?' · '+p.tags.map(t=>CATS[t].label).join(' · '):''}</div>
+    `;
+    frag.appendChild(card);
+  });
+  // Una sola mutación del DOM en vez de N `appendChild` sucesivos: agrupa
+  // todo el trabajo de layout en un único reflow, encapsulado en rAF para
+  // sincronizarlo con el ciclo de pintado del navegador.
+  requestAnimationFrame(() => {
+    board.innerHTML = '';
+    if(shown===0){
+      board.innerHTML = '<div class="empty-msg">Ningún post-it coincide con la búsqueda o el filtro seleccionado.</div>';
+    } else {
+      board.appendChild(frag);
+    }
+  });
+  document.getElementById('statVisible').textContent = shown;
+  document.getElementById('statTotal').textContent = P.length;
+  updateDominadasStat();
+}
+
+function updateDominadasStat(){
+  const prog = getProgress();
+  const count = Object.values(prog).filter(x => x.dominado).length;
+  document.getElementById('statDominadas').textContent = count;
+}
+
+document.getElementById('statTotal').textContent = P.length;
+
+const overlay = document.getElementById('overlay');
+const modalCard = document.getElementById('modalCard');
+function openModal(p){
+  const cfg = CATS[p.cat];
+  modalCard.style.setProperty('--c', cfg.c);
+  modalCard.style.setProperty('--ct', cfg.ct);
+  document.getElementById('modalHead').innerHTML =
+    `<span class="tagpill">Nota original ${p.nota}</span><span class="tagpill">${cfg.label}</span>` +
+    (p.tags? p.tags.map(t=>`<span class="tagpill">${CATS[t].label}</span>`).join('') : '');
+  document.getElementById('modalTitle').textContent = p.titulo;
+  let body = p.body;
+  if(p.original){
+    body += `<div class="orig-note">📌 Nota sobre el original: ${p.original}</div>`;
+  }
+  document.getElementById('modalBody').innerHTML = body;
+  const existingDelBtn = document.getElementById('modalDeleteBtn');
+  if(existingDelBtn) existingDelBtn.remove();
+  if(String(p.id).startsWith('extra-')){
+    const delBtn = document.createElement('button');
+    delBtn.id = 'modalDeleteBtn';
+    delBtn.className = 'extra-note-delete';
+    delBtn.textContent = '🗑 Eliminar esta nota (añadida por ti)';
+    delBtn.onclick = () => {
+      if(confirm('¿Eliminar esta nota? Recuerda pulsar "Guardar cambios" después para que el borrado se quede en el archivo.')){
+        deleteExtraNote(p.id);
+        overlay.classList.remove('open');
+      }
+    };
+    modalCard.appendChild(delBtn);
+  }
+  overlay.classList.add('open');
+  lockScroll();
+}
+function closeModal(){
+  if(!overlay.classList.contains('open')) return;
+  overlay.classList.remove('open');
+  unlockScroll();
+}
+document.getElementById('modalClose').onclick = closeModal;
+overlay.onclick = (e) => { if(e.target===overlay) closeModal(); };
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// Hoja inferior en móvil: el tirador de arriba se puede arrastrar hacia
+// abajo con el dedo para cerrar la nota, como en cualquier bottom sheet
+// nativo. En escritorio el tirador está oculto (display:none), así que
+// estos listeners simplemente no reciben eventos.
+(function initModalSheetDrag(){
+  const handle = document.getElementById('modalHandle');
+  if(!handle) return;
+  let startY = 0, dragging = false, pendingDy = null, rafId = null;
+
+  function applyDrag(dy){ modalCard.style.transform = `translate3d(0,${dy}px,0)`; }
+  function scheduleDrag(dy){
+    pendingDy = dy;
+    if(rafId !== null) return;
+    rafId = requestAnimationFrame(() => { rafId = null; if(pendingDy !== null) applyDrag(pendingDy); });
+  }
+  handle.addEventListener('pointerdown', (e) => {
+    if(e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+    dragging = true;
+    startY = e.clientY;
+    modalCard.style.willChange = 'transform';
+    modalCard.style.transition = 'none';
+    try{ handle.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  handle.addEventListener('pointermove', (e) => {
+    if(!dragging) return;
+    scheduleDrag(Math.max(0, e.clientY - startY));
+  }, { passive: true });
+  function endDrag(e){
+    if(!dragging) return;
+    dragging = false;
+    if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+    pendingDy = null;
+    modalCard.style.willChange = 'auto';
+    modalCard.style.transition = '';
+    const dy = Math.max(0, e.clientY - startY);
+    modalCard.style.transform = '';
+    if(dy > 90) closeModal();
+  }
+  handle.addEventListener('pointerup', endDrag);
+  handle.addEventListener('pointercancel', endDrag);
+})();
+
+const searchClearBtn = document.getElementById('searchClear');
+searchEl.addEventListener('input', () => {
+  render();
+  searchClearBtn.hidden = !searchEl.value;
+});
+searchClearBtn.addEventListener('click', () => {
+  searchEl.value = '';
+  searchEl.focus();
+  render();
+  searchClearBtn.hidden = true;
+});
+
+buildChips();
+render();
+
+// ---- Modo repaso ----
+const PROGRESS_KEY = 'elcorcho_progreso_v1';
+
+function getProgress(){
+  const PROGRESS_KEY = 'elcorcho_progreso_v1';
+  if(typeof(Storage) === 'undefined') return {};
+  try{
+    return JSON.parse(localStorage.getItem(PROGRESS_KEY) || '{}') || {};
+  }catch(e){ 
+    console.error('localStorage error:', e);
+    return {}; 
+  }
+}
+function saveProgress(prog){
+  const PROGRESS_KEY = 'elcorcho_progreso_v1';
+  if(typeof(Storage) === 'undefined') return;
+  try{ 
+    localStorage.setItem(PROGRESS_KEY, JSON.stringify(prog)); 
+  }catch(e){ 
+    console.warn('localStorage save error:', e);
+  }
+}
+function markProgress(id, dominado){
+  const prog = getProgress();
+  prog[id] = { dominado, lastReview: Date.now() };
+  saveProgress(prog);
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const reviewOverlay = document.getElementById('reviewOverlay');
+const reviewCardWrap = document.getElementById('reviewCardWrap');
+const reviewActions = document.getElementById('reviewActions');
+const reviewCard = document.getElementById('reviewCard');
+
+let reviewQueue = [];
+let reviewIdx = 0;
+let reviewMode = 'all'; // 'all' | 'pending'
+let sessionStats = { dominado:0, repasar:0 };
+
+function currentlyVisibleSet(){
+  // respeta el filtro de chips y la búsqueda activos en el tablero
+  const q = searchEl.value.trim();
+  return P.filter(p => allTags(p).some(t => activeCats.has(t)) && matchesSearch(p, q));
+}
+
+function buildReviewQueue(mode){
+  const base = currentlyVisibleSet();
+  if(mode === 'pending'){
+    const prog = getProgress();
+    return base.filter(p => !prog[p.id]?.dominado);
+  }
+  return base;
+}
+
+function startReview(mode){
+  reviewMode = mode;
+  reviewQueue = shuffle(buildReviewQueue(mode));
+  reviewIdx = 0;
+  sessionStats = { dominado:0, repasar:0 };
+  document.getElementById('rmAll').classList.toggle('active', mode==='all');
+  document.getElementById('rmPending').classList.toggle('active', mode==='pending');
+  if(!reviewOverlay.classList.contains('open')) lockScroll();
+  reviewOverlay.classList.add('open');
+  renderReviewStep();
+}
+
+function renderReviewStep(){
+  document.getElementById('reviewTotalTxt').textContent = reviewQueue.length;
+
+  if(reviewQueue.length === 0){
+    showReviewEmpty();
+    return;
+  }
+  if(reviewIdx >= reviewQueue.length){
+    showReviewSummary();
+    return;
+  }
+  reviewActions.style.display = 'flex';
+  const p = reviewQueue[reviewIdx];
+  const cfg = CATS[p.cat];
+  reviewCard.style.setProperty('--c', cfg.c);
+  reviewCard.style.setProperty('--ct', cfg.ct);
+  document.getElementById('reviewHead').innerHTML =
+    `<span class="tagpill">Nota original ${p.nota}</span><span class="tagpill">${cfg.label}</span>` +
+    (p.tags? p.tags.map(t=>`<span class="tagpill">${CATS[t].label}</span>`).join('') : '');
+  document.getElementById('reviewTitle').textContent = p.titulo;
+  let body = p.body;
+  if(p.original){
+    body += `<div class="orig-note">📌 Nota sobre el original: ${p.original}</div>`;
+  }
+  document.getElementById('reviewBody').innerHTML = body;
+  document.getElementById('reviewIdxTxt').textContent = reviewIdx+1;
+  document.getElementById('reviewFill').style.width = (100*(reviewIdx)/reviewQueue.length) + '%';
+  reviewCardWrap.innerHTML = '';
+  reviewCardWrap.appendChild(reviewCard);
+  reviewCardWrap.scrollTop = 0;
+}
+
+function showReviewEmpty(){
+  reviewActions.style.display = 'none';
+  document.getElementById('reviewFill').style.width = '0%';
+  reviewCardWrap.innerHTML = `
+    <div class="review-summary">
+      <h2>Nada que repasar aquí</h2>
+      <p>No hay post-its pendientes con el filtro/modo actual. Prueba con "Todo lo filtrado" o cambia los chips del tablero.</p>
+      <div class="rs-actions">
+        <button class="rs-close" id="rsCloseEmpty">Cerrar</button>
+      </div>
+    </div>`;
+  document.getElementById('rsCloseEmpty').onclick = closeReview;
+}
+
+function showReviewSummary(){
+  reviewActions.style.display = 'none';
+  document.getElementById('reviewFill').style.width = '100%';
+  document.getElementById('reviewIdxTxt').textContent = reviewQueue.length;
+  reviewCardWrap.innerHTML = `
+    <div class="review-summary">
+      <h2>Tanda completada</h2>
+      <div class="rs-row">
+        <div class="rs-dominado"><div class="rs-num">${sessionStats.dominado}</div><div class="rs-label">Dominadas</div></div>
+        <div class="rs-repasar"><div class="rs-num">${sessionStats.repasar}</div><div class="rs-label">A repasar</div></div>
+      </div>
+      <div class="rs-actions">
+        <button class="rs-again" id="rsAgainPending">🔁 Repasar solo pendientes</button>
+        <button class="rs-again" id="rsAgainAll">🔄 Repetir tanda completa</button>
+        <button class="rs-close" id="rsClose">Cerrar</button>
+      </div>
+    </div>`;
+  document.getElementById('rsAgainPending').onclick = () => startReview('pending');
+  document.getElementById('rsAgainAll').onclick = () => startReview(reviewMode);
+  document.getElementById('rsClose').onclick = closeReview;
+}
+
+function reviewNext(){
+  if(reviewIdx < reviewQueue.length){ reviewIdx++; }
+  renderReviewStep();
+}
+function reviewPrev(){
+  if(reviewIdx > 0){ reviewIdx--; }
+  renderReviewStep();
+}
+function reviewMark(dominado){
+  if(reviewIdx >= reviewQueue.length) return;
+  const p = reviewQueue[reviewIdx];
+  markProgress(p.id, dominado);
+  if(dominado) sessionStats.dominado++; else sessionStats.repasar++;
+  haptic(dominado ? 15 : [12, 40, 12]);
+  updateDominadasStat();
+  reviewNext();
+}
+
+function closeReview(){
+  if(reviewOverlay.classList.contains('open')) unlockScroll();
+  reviewOverlay.classList.remove('open');
+  render(); // refresca el tablero para mostrar los nuevos badges de "dominado"
+}
+
+document.getElementById('btnStartReview').onclick = () => startReview('all');
+document.getElementById('reviewExit').onclick = closeReview;
+document.getElementById('rmAll').onclick = () => startReview('all');
+document.getElementById('rmPending').onclick = () => startReview('pending');
+document.getElementById('reviewPrev').onclick = reviewPrev;
+document.getElementById('reviewNext').onclick = reviewNext;
+document.getElementById('reviewMarkRepasar').onclick = () => reviewMark(false);
+document.getElementById('reviewMarkDominado').onclick = () => reviewMark(true);
+
+document.addEventListener('keydown', e => {
+  if(!reviewOverlay.classList.contains('open')) return;
+  if(e.key === 'Escape'){ closeReview(); return; }
+  if(reviewIdx >= reviewQueue.length) return; // en la pantalla resumen, no navegar
+  if(e.key === 'ArrowRight'){ reviewNext(); }
+  else if(e.key === 'ArrowLeft'){ reviewPrev(); }
+  else if(e.key.toLowerCase() === 'r'){ reviewMark(false); }
+  else if(e.key.toLowerCase() === 'd'){ reviewMark(true); }
+});
+
+// Deslizar la tarjeta de repaso con el dedo: izquierda = "a repasar",
+// derecha = "lo tengo claro". Solo se activa con puntero táctil/lápiz para
+// no interferir con la selección de texto por ratón en escritorio.
+//
+// Ajustado para máxima fluidez en móvil:
+// - pointermove/pointerup/pointercancel en window solo existen MIENTRAS
+//   dura el gesto (se añaden en pointerdown, se quitan al soltar). Un
+//   listener táctil activo todo el rato —y encima no pasivo— le impide al
+//   navegador usar su scroll rápido por compositor en TODA la página, no
+//   solo en el repaso: era la causa principal de los cortes generales.
+// - son pasivos (sin preventDefault): touch-action:pan-y en la tarjeta ya
+//   le dice al navegador que el gesto vertical es nativo/rápido, y que
+//   solo el arrastre horizontal pasa por este código.
+// - los cambios de estilo se agrupan con requestAnimationFrame: como
+//   mucho una escritura por fotograma, nunca una por evento táctil (que
+//   pueden llegar más rápido que la pantalla).
+(function initReviewSwipe(){
+  const stampDominado = document.getElementById('stampDominado');
+  const stampRepasar = document.getElementById('stampRepasar');
+  const THRESHOLD = 90;
+  let sx = 0, sy = 0, decided = false, horizontal = false;
+  let pendingDx = null, rafId = null;
+
+  function setStamps(dx){
+    const t = Math.min(1, Math.abs(dx) / THRESHOLD);
+    stampDominado.style.opacity = dx > 0 ? t : 0;
+    stampRepasar.style.opacity = dx < 0 ? t : 0;
+  }
+  function applyDrag(dx){
+    reviewCard.style.transform = `translate3d(${dx}px,0,0) rotate(${dx/18}deg)`;
+    setStamps(dx);
+  }
+  function scheduleDrag(dx){
+    pendingDx = dx;
+    if(rafId !== null) return;
+    rafId = requestAnimationFrame(() => {
+      rafId = null;
+      if(pendingDx !== null) applyDrag(pendingDx);
+    });
+  }
+  function resetCard(){
+    reviewCard.style.willChange = 'auto';
+    reviewCard.style.transition = 'transform .2s ease';
+    reviewCard.style.transform = '';
+    setStamps(0);
+  }
+  function detachDragListeners(){
+    window.removeEventListener('pointermove', onMove);
+    window.removeEventListener('pointerup', onUp);
+    window.removeEventListener('pointercancel', onCancel);
+    if(rafId !== null){ cancelAnimationFrame(rafId); rafId = null; }
+    pendingDx = null;
+  }
+  function onMove(e){
+    const dx = e.clientX - sx, dy = e.clientY - sy;
+    if(!decided){
+      if(Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      decided = true;
+      horizontal = Math.abs(dx) > Math.abs(dy);
+      if(!horizontal){ onUp(e); return; }
+    }
+    if(horizontal) scheduleDrag(dx);
+  }
+  function onUp(e){
+    detachDragListeners();
+    if(!decided || !horizontal){ resetCard(); return; }
+    const dx = e.clientX - sx;
+    if(Math.abs(dx) > THRESHOLD){
+      const goingRight = dx > 0;
+      const exitX = goingRight ? window.innerWidth : -window.innerWidth;
+      reviewCard.style.transition = 'transform .2s ease, opacity .2s ease';
+      reviewCard.style.transform = `translate3d(${exitX}px,0,0) rotate(${goingRight?22:-22}deg)`;
+      reviewCard.style.opacity = '0';
+      setTimeout(() => {
+        reviewCard.style.willChange = 'auto';
+        reviewCard.style.transition = 'none';
+        reviewCard.style.transform = '';
+        reviewCard.style.opacity = '';
+        setStamps(0);
+        reviewMark(goingRight);
+      }, 180);
+    } else {
+      resetCard();
+    }
+  }
+  function onCancel(){
+    detachDragListeners();
+    resetCard();
+  }
+
+  reviewCard.addEventListener('pointerdown', (e) => {
+    if(e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+    if(reviewIdx >= reviewQueue.length) return; // pantalla de resumen/vacío
+    sx = e.clientX; sy = e.clientY;
+    decided = false; horizontal = false;
+    reviewCard.style.willChange = 'transform, opacity';
+    reviewCard.style.transition = 'none';
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerup', onUp, { passive: true });
+    window.addEventListener('pointercancel', onCancel, { passive: true });
+  });
+})();
+
+updateDominadasStat();
+
+// Salvaguarda: en casos de carga lenta de storage
+if(document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => render(), {once: true});
+} else {
+  render();
+}
+
+// ---- Añadir / eliminar notas y guardar en el propio archivo ----
+let dirty = false;
+let fileHandle = null;
+
+function markDirty(){
+  dirty = true;
+  document.getElementById('btnSave').classList.add('dirty');
+}
+function markSaved(){
+  dirty = false;
+  document.getElementById('btnSave').classList.remove('dirty');
+}
+window.addEventListener('beforeunload', e => {
+  if(dirty){ e.preventDefault(); e.returnValue=''; }
+});
+
+function showToast(msg){
+  const t = document.getElementById('saveToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3200);
+}
+
+// -- Formulario --
+const addOverlay = document.getElementById('addOverlay');
+const fCat = document.getElementById('fCat');
+const fTags = document.getElementById('fTags');
+let fSelectedTags = new Set();
+
+function buildFormSelectors(){
+  fCat.innerHTML = '';
+  Object.entries(CATS).forEach(([key,cfg])=>{
+    const opt = document.createElement('option');
+    opt.value = key; opt.textContent = cfg.label;
+    fCat.appendChild(opt);
+  });
+  fTags.innerHTML = '';
+  Object.entries(CATS).forEach(([key,cfg])=>{
+    const chip = document.createElement('div');
+    chip.className = 'form-tag-chip';
+    chip.dataset.key = key;
+    chip.textContent = cfg.label;
+    chip.style.background = cfg.c;
+    chip.style.color = cfg.ct;
+    chip.onclick = () => {
+      if(fSelectedTags.has(key)) fSelectedTags.delete(key); else fSelectedTags.add(key);
+      chip.classList.toggle('active');
+    };
+    fTags.appendChild(chip);
+  });
+}
+
+function openAddForm(){
+  fSelectedTags = new Set();
+  buildFormSelectors();
+  document.getElementById('fError').classList.remove('show');
+  document.getElementById('fTitulo').value = '';
+  document.getElementById('fBody').value = '';
+  const maxNota = P.reduce((m,p)=>Math.max(m, Number(p.nota)||0), 0);
+  document.getElementById('fNota').value = maxNota + 1;
+  addOverlay.classList.add('open');
+  lockScroll();
+  document.getElementById('fTitulo').focus();
+}
+function closeAddForm(){
+  if(addOverlay.classList.contains('open')) unlockScroll();
+  addOverlay.classList.remove('open');
+}
+
+// Convierte texto simple escrito por el usuario en el mismo HTML ligero
+// que usa el resto de post-its: **negrita**, "- " sangría, "-- " doble sangría.
+function formatBodyInput(raw){
+  const lines = raw.replace(/\r\n/g,'\n').split('\n');
+  const parts = [];
+  lines.forEach(line=>{
+    if(line.trim()===''){ parts.push({html:'', isSpan:false, blank:true}); return; }
+    let cls = null, l = line;
+    if(/^--\s+/.test(l)){ cls='ind2'; l = l.replace(/^--\s+/,''); }
+    else if(/^-\s+/.test(l)){ cls='ind1'; l = l.replace(/^-\s+/,''); }
+    l = l.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    l = l.replace(/\*\*(.+?)\*\*/g, '<b>$1</b>');
+    if(cls) parts.push({html:`<span class="${cls}">${l}</span>`, isSpan:true});
+    else parts.push({html:l, isSpan:false});
+  });
+  let out = '';
+  parts.forEach((p,i)=>{
+    if(i>0){
+      const prev = parts[i-1];
+      if(!(prev.isSpan && p.isSpan)) out += '<br>';
+    }
+    out += p.html;
+  });
+  return out;
+}
+
+function deleteExtraNote(id){
+  const idx = NOTAS_EXTRA.findIndex(n=>n.id===id);
+  if(idx>-1) NOTAS_EXTRA.splice(idx,1);
+  const idxP = P.findIndex(n=>n.id===id);
+  if(idxP>-1) P.splice(idxP,1);
+  P_BY_ID.delete(String(id));
+  buildChips(); syncChips(); render();
+  markDirty();
+}
+
+document.getElementById('btnAddNote').onclick = openAddForm;
+document.getElementById('addFormClose').onclick = closeAddForm;
+document.getElementById('fCancel').onclick = closeAddForm;
+addOverlay.onclick = (e)=>{ if(e.target===addOverlay) closeAddForm(); };
+
+document.getElementById('fSubmit').onclick = () => {
+  const titulo = document.getElementById('fTitulo').value.trim();
+  const bodyRaw = document.getElementById('fBody').value.trim();
+  const notaNum = Number(document.getElementById('fNota').value) || 1;
+  const errEl = document.getElementById('fError');
+  if(!titulo || !bodyRaw){ errEl.classList.add('show'); return; }
+  errEl.classList.remove('show');
+
+  const id = 'extra-' + Date.now();
+  const note = {
+    id, nota: notaNum, cat: fCat.value,
+    ...(fSelectedTags.size? {tags:[...fSelectedTags]} : {}),
+    titulo,
+    body: formatBodyInput(bodyRaw)
+  };
+  NOTAS_EXTRA.push(note);
+  P.push(note);
+  P_BY_ID.set(String(id), note);
+  buildChips(); syncChips(); render();
+  markDirty();
+  closeAddForm();
+  showToast('Nota añadida. No olvides pulsar "Guardar cambios" para que quede en el archivo.');
+};
+
+// -- Guardado en el propio HTML --
+function buildUpdatedHtml(){
+  const notasSrc = 'const NOTAS_EXTRA = ' + JSON.stringify(NOTAS_EXTRA, null, 2) + ';';
+  return __PRISTINE_HTML__.replace(
+    /\/\/ NOTAS_EXTRA_START[\s\S]*?\/\/ NOTAS_EXTRA_END/,
+    '// NOTAS_EXTRA_START\n' + notasSrc + '\n// NOTAS_EXTRA_END'
+  );
+}
+
+function downloadHtml(html){
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'index.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  showToast('Descargado. Sustituye tu archivo antiguo por este para conservar los cambios.');
+  markSaved();
+}
+
+async function saveToDisk(){
+  const newHtml = buildUpdatedHtml();
+  if('showSaveFilePicker' in window){
+    try{
+      if(!fileHandle){
+        fileHandle = await window.showSaveFilePicker({
+          suggestedName: 'index.html',
+          types: [{description:'Página HTML', accept:{'text/html':['.html']}}]
+        });
+      }
+      const writable = await fileHandle.createWritable();
+      await writable.write(newHtml);
+      await writable.close();
+      showToast('Guardado directamente en tu archivo ✓');
+      markSaved();
+      return;
+    }catch(err){
+      if(err && err.name === 'AbortError') return; // el usuario canceló el diálogo
+      console.error('No se pudo guardar directamente, se descarga en su lugar:', err);
+    }
+  }
+  downloadHtml(newHtml);
+}
+
+document.getElementById('btnSave').onclick = saveToDisk;
+
+// ================= TEST RÁPIDO (banco de 408 preguntas) =================
+const TEST_BANK = [{"q":"¿Qué dirige el Gobierno, además de la política interior y la defensa del Estado?","opts":["La política exterior","La potestad reglamentaria","La función jurisdiccional"],"correct":0},{"q":"¿Cuál de las siguientes NO es una función que el Gobierno \"dirige\", sino que \"ejerce\"?","opts":["La administración civil y militar","La función ejecutiva","La defensa del Estado"],"correct":1},{"q":"Según la Constitución, ¿con arreglo a qué debe ejercerse la potestad reglamentaria del Gobierno?","opts":["A la CE y las leyes","A los reglamentos de las Cortes","A los decretos de necesidad"],"correct":0},{"q":"¿Qué artículos de la Constitución comprende el Título Preliminar?","opts":["Art. 1-9","Art. 1-13","Art. 10-55"],"correct":0},{"q":"¿Qué artículos regulan \"Los derechos y deberes fundamentales\" (Título I)?","opts":["Art. 10-55","Art. 56-65","Art. 39-52"],"correct":0},{"q":"¿Qué capítulo del Título I regula \"De los españoles y extranjeros\"?","opts":["Capítulo I (art. 11-13)","Capítulo II (art. 14-38)","Capítulo III (art. 39-52)"],"correct":0},{"q":"Dentro del Capítulo II del Título I, ¿qué sección regula las libertades y derechos fundamentales?","opts":["Sección 1 (art. 15-29)","Sección 2 (art. 30-38)","Sección única (art. 14-38)"],"correct":0},{"q":"¿Qué artículos regulan los \"Principios rectores de la política social y económica\"?","opts":["Art. 39-52","Art. 53-54","Art. 30-38"],"correct":0},{"q":"¿Qué capítulo del Título I regula la suspensión de los derechos fundamentales?","opts":["Capítulo V (art. 55)","Capítulo IV (art. 53-54)","Capítulo III (art. 39-52)"],"correct":0},{"q":"¿Qué título de la Constitución regula \"La Corona\"?","opts":["Título II (art. 56-65)","Título III (art. 66-96)","Título I (art. 10-55)"],"correct":0},{"q":"¿Qué artículos regulan \"De las Cortes Generales\" (Título III)?","opts":["Art. 66-96","Art. 97-107","Art. 108-116"],"correct":0},{"q":"Dentro del Título III, ¿qué capítulo regula \"De la elaboración de las leyes\"?","opts":["Capítulo II (art. 81-92)","Capítulo I (art. 66-80)","Capítulo III (art. 93-96)"],"correct":0},{"q":"¿Qué artículos regulan \"Del Gobierno y la Administración\" (Título IV)?","opts":["Art. 97-107","Art. 108-116","Art. 117-127"],"correct":0},{"q":"¿Qué título regula \"Las relaciones entre el Gobierno y las Cortes Generales\"?","opts":["Título V (art. 108-116)","Título VI (art. 117-127)","Título IV (art. 97-107)"],"correct":0},{"q":"¿Qué artículos regulan \"Del Poder Judicial\" (Título VI)?","opts":["Art. 117-127","Art. 128-136","Art. 108-116"],"correct":0},{"q":"¿Qué título regula \"Economía y Hacienda\"?","opts":["Título VII (art. 128-136)","Título VIII (art. 137-158)","Título IX (art. 159-165)"],"correct":0},{"q":"¿Qué artículos regulan la \"Organización territorial del Estado\" (Título VIII)?","opts":["Art. 137-158","Art. 159-165","Art. 166-169"],"correct":0},{"q":"Dentro del Título VIII, ¿qué capítulo regula la Administración local?","opts":["Capítulo II (art. 140-142)","Capítulo I (art. 137-139)","Capítulo III (art. 143-158)"],"correct":0},{"q":"¿Qué artículos regulan las Comunidades Autónomas dentro del Título VIII?","opts":["Art. 143-158","Art. 140-142","Art. 137-139"],"correct":0},{"q":"¿Qué título regula el Tribunal Constitucional?","opts":["Título IX (art. 159-165)","Título X (art. 166-169)","Título VI (art. 117-127)"],"correct":0},{"q":"¿Qué artículos regulan \"De la reforma constitucional\" (Título X)?","opts":["Art. 166-169","Art. 159-165","Art. 137-158"],"correct":0},{"q":"¿Cuántas disposiciones adicionales tiene la Constitución Española?","opts":["4","9","1"],"correct":0},{"q":"¿Cuántas disposiciones transitorias tiene la Constitución Española?","opts":["9","4","2"],"correct":0},{"q":"¿Cuántas disposiciones derogatorias y finales tiene, respectivamente, la Constitución?","opts":["1 derogatoria y 1 final","2 derogatorias y 1 final","1 derogatoria y 2 finales"],"correct":0},{"q":"¿En qué fecha aprobaron las Cortes Generales el texto de la Constitución de 1978?","opts":["31 de octubre","6 de diciembre","27 de diciembre"],"correct":0},{"q":"¿En qué fecha fue ratificada la Constitución por referéndum?","opts":["6 de diciembre","31 de octubre","29 de diciembre"],"correct":0},{"q":"¿En qué fecha sancionó y promulgó el Rey la Constitución?","opts":["27 de diciembre","6 de diciembre","29 de diciembre"],"correct":0},{"q":"¿En qué fecha se publicó la Constitución en el BOE y entró en vigor?","opts":["29 de diciembre","27 de diciembre","31 de octubre"],"correct":0},{"q":"¿Cuántos Diputados o Senadores son necesarios para interponer un recurso de inconstitucionalidad?","opts":["50","35","100"],"correct":0},{"q":"¿Quién plantea la cuestión de inconstitucionalidad?","opts":["Jueces o Tribunales","El Defensor del Pueblo","50 Diputados o Senadores"],"correct":0},{"q":"¿Cuál de los siguientes está legitimado para interponer un recurso de inconstitucionalidad?","opts":["El Presidente del Gobierno","Un Juez de Instrucción","Un particular afectado"],"correct":0},{"q":"¿Por quién es elegido el Defensor del Pueblo?","opts":["Por las Cortes Generales","Por el Rey","Por el Consejo de Ministros"],"correct":0},{"q":"¿Quién propone al candidato a Defensor del Pueblo?","opts":["La Comisión mixta Congreso-Senado","El Presidente del Gobierno","El CGPJ"],"correct":0},{"q":"¿Con las firmas de quiénes se nombra al Defensor del Pueblo?","opts":["Presidente del Congreso y del Senado","El Rey y el Presidente del Gobierno","Presidente del TC y del CGPJ"],"correct":0},{"q":"¿Ante qué órgano toma posesión el Defensor del Pueblo?","opts":["Las Mesas del Congreso y del Senado reunidas conjuntamente","El Tribunal Constitucional","El Rey en audiencia privada"],"correct":0},{"q":"¿Qué mayoría se requiere para la elección de los vocales del CGPJ?","opts":["3/5","Mayoría absoluta","2/3"],"correct":0},{"q":"¿Cuál es la duración del mandato del CGPJ?","opts":["5 años","9 años","4 años"],"correct":0},{"q":"¿Cómo se compone el CGPJ además de su Presidente?","opts":["20 vocales","12 vocales","15 vocales"],"correct":0},{"q":"De los 12 vocales del CGPJ que son Jueces y Magistrados, ¿cómo se reparten entre Congreso y Senado?","opts":["6 por el Congreso y 6 por el Senado","4 por el Congreso y 8 por el Senado","8 por el Congreso y 4 por el Senado"],"correct":0},{"q":"De los 8 vocales juristas del CGPJ, ¿cómo se reparten entre Congreso y Senado?","opts":["4 por el Congreso y 4 por el Senado","6 por el Congreso y 2 por el Senado","2 por el Congreso y 6 por el Senado"],"correct":0},{"q":"¿Cuántos miembros componen el Tribunal Constitucional?","opts":["12","20","15"],"correct":0},{"q":"¿Cuál es la duración del mandato de los miembros del Tribunal Constitucional?","opts":["9 años","5 años","6 años"],"correct":0},{"q":"¿Cuántos miembros del Tribunal Constitucional propone el Congreso?","opts":["4","6","2"],"correct":0},{"q":"¿Cuántos miembros del Tribunal Constitucional propone el Gobierno?","opts":["2","4","6"],"correct":0},{"q":"¿Cuántos miembros del Tribunal Constitucional propone el CGPJ?","opts":["2","4","1"],"correct":0},{"q":"¿Quién elige al Presidente del Tribunal Constitucional y por cuántos años?","opts":["El propio Tribunal, por 3 años","El Rey, por 9 años","El CGPJ, por 5 años"],"correct":0},{"q":"¿Qué tipo de mayoría se requiere, con carácter general, para la aprobación de una ley ordinaria?","opts":["Mayoría simple","Mayoría absoluta","Mayoría de 3/5"],"correct":0},{"q":"¿Qué mayoría se necesita para aprobar una ley orgánica o una moción de censura?","opts":["Mayoría absoluta","Mayoría simple","Mayoría de 2/3"],"correct":0},{"q":"¿Qué mayoría se exige para la elección de los vocales del CGPJ o magistrados del TC?","opts":["Mayoría de 3/5","Mayoría absoluta","Mayoría de 2/3"],"correct":0},{"q":"¿Qué mayoría se exige para las cuestiones relativas a la Corona o la reforma agravada de la Constitución?","opts":["Mayoría de 2/3","Mayoría de 3/5","Mayoría absoluta"],"correct":0},{"q":"¿Cómo se vota en las Cortes una cuestión relativa a la Corona (no legislativa, del Título II)?","opts":["En sesión conjunta de ambas Cámaras","Solo en el Congreso","Primero Senado y después Congreso"],"correct":0},{"q":"¿Qué Cámara ejerce en solitario el control político del Gobierno?","opts":["El Congreso","El Senado","Ambas por igual"],"correct":0},{"q":"En los asuntos territoriales relativos a las CCAA, ¿en qué orden se vota en las Cortes?","opts":["Primero el Senado y después el Congreso","Primero el Congreso y después el Senado","Solo el Senado"],"correct":0},{"q":"En la elaboración de leyes comunes, ¿de cuánto tiempo dispone el Senado para enmendar o vetar tras la aprobación del Congreso?","opts":["2 meses","1 mes","3 meses"],"correct":0},{"q":"¿Qué mayoría se exige en la votación simultánea de ambas Cámaras para la reforma de la Constitución?","opts":["2/3","3/5","Mayoría absoluta"],"correct":0},{"q":"Además del voto conjunto en la reforma constitucional, ¿qué otra votación se realiza de forma simultánea en ambas Cámaras con mayoría de 3/5?","opts":["La elección de jueces (vocales CGPJ, magistrados TC)","La moción de censura","La declaración del estado de sitio"],"correct":0},{"q":"¿Puede una misma persona ser Diputado y Senador simultáneamente?","opts":["No","Sí, sin restricciones","Sí, solo si es de la misma circunscripción"],"correct":0},{"q":"¿Se puede acumular el acta de miembro de la Asamblea de una CCAA con la de Senador?","opts":["Sí, es posible","No, está prohibido","Solo con autorización de las Cortes"],"correct":0},{"q":"¿Puede el Presidente de una Comunidad Autónoma ser Diputado en las Cortes Generales?","opts":["No, porque es miembro de la Asamblea autonómica","Sí, sin ninguna limitación","Sí, pero solo si renuncia a su cargo autonómico"],"correct":0},{"q":"¿Quién decreta la disolución de las Cámaras (Congreso y Senado)?","opts":["El Rey","El Presidente del Gobierno","El Presidente del Congreso"],"correct":0},{"q":"¿Cuántos senadores corresponden a cada una de las islas mayores del archipiélago?","opts":["3","1","2"],"correct":0},{"q":"¿Cuántos senadores corresponden a cada una de las islas menores?","opts":["1","3","2"],"correct":0},{"q":"¿De quién depende directamente la Oficina Presupuestaria?","opts":["Del Titular de la Subsecretaría del Interior","Del Ministro del Interior","De la Dirección General de la Policía"],"correct":0},{"q":"¿Quién convoca el referéndum en España?","opts":["El Rey","El Presidente del Gobierno","Las Cortes Generales"],"correct":0},{"q":"¿Quién propone la convocatoria de un referéndum?","opts":["El Presidente del Gobierno","El Rey","El Defensor del Pueblo"],"correct":0},{"q":"¿Quién autoriza la convocatoria de un referéndum?","opts":["Las Cortes Generales","El Tribunal Constitucional","El CGPJ"],"correct":0},{"q":"¿Qué tipo de norma regula los derechos fundamentales y las libertades públicas, y qué mayoría requiere?","opts":["Ley Orgánica, mayoría absoluta del Congreso","Ley Ordinaria, mayoría simple","Decreto-Ley, urgencia"],"correct":0},{"q":"Si una Ley Orgánica afecta a las Comunidades Autónomas, ¿qué mayoría adicional se requiere?","opts":["Mayoría absoluta también del Senado","Mayoría de 3/5 del Senado","Unanimidad del Senado"],"correct":0},{"q":"Dentro de una Ley Orgánica, ¿cómo se denomina a aquella por la que el Estado otorga facultades a las CCAA?","opts":["Ley de Transferencia","Ley de Bases","Ley Marco"],"correct":0},{"q":"¿Qué tipo de leyes son las \"leyes marco\" y las \"leyes de armonización\"?","opts":["Leyes Ordinarias","Leyes Orgánicas","Decretos Legislativos"],"correct":0},{"q":"¿Qué norma se dicta por razones de extraordinaria y urgente necesidad?","opts":["El Decreto-Ley","El Decreto Legislativo","La Ley de Bases"],"correct":0},{"q":"¿Qué norma se produce cuando las Cortes Generales delegan la potestad legislativa en el Gobierno?","opts":["El Decreto Legislativo","El Decreto-Ley","La Ley Ordinaria"],"correct":0},{"q":"Una Ley de Bases da lugar a un:","opts":["Texto Articulado","Texto Refundido","Reglamento Ejecutivo"],"correct":0},{"q":"¿Qué tipo de norma da lugar a un Texto Refundido?","opts":["Una Ley Ordinaria","Una Ley de Bases","Una Ley Orgánica"],"correct":0},{"q":"Si una ley no fija fecha concreta, ¿en cuánto tiempo debe publicarse en el BOE?","opts":["20 días","15 días","30 días"],"correct":0},{"q":"¿De cuánto tiempo dispone el Rey para sancionar una ley antes de su publicación en el BOE?","opts":["15 días","20 días","10 días"],"correct":0},{"q":"¿Cuál es el período de pago voluntario en vía administrativa según estas notas?","opts":["20 días","15 días","30 días"],"correct":0},{"q":"¿Quién declara el estado de alarma y mediante qué instrumento?","opts":["El Gobierno, mediante Decreto del Consejo de Ministros","El Congreso, a propuesta del Gobierno","El Rey, mediante Real Decreto"],"correct":0},{"q":"¿Quién declara el estado de excepción y qué requisito adicional necesita?","opts":["El Gobierno, mediante RD del Consejo de Ministros con autorización del Congreso","El Congreso, a propuesta exclusiva del Gobierno","El Rey, con refrendo del Presidente del Gobierno"],"correct":0},{"q":"¿Quién declara el estado de sitio?","opts":["El Congreso, a propuesta exclusiva del Gobierno","El Gobierno, mediante Decreto del Consejo de Ministros","El Rey, a propuesta del Presidente del Gobierno"],"correct":0},{"q":"Estando el Gobierno en funciones, ¿cuál de las siguientes actuaciones tiene prohibidas su Presidente?","opts":["Disolver las Cortes Generales","Convocar elecciones ordinarias","Nombrar Ministros interinos"],"correct":0},{"q":"El Presidente del Gobierno en funciones tampoco puede:","opts":["Convocar un referéndum consultivo","Sancionar leyes ordinarias","Presidir el Consejo de Ministros"],"correct":0},{"q":"Un Gobierno en funciones no puede:","opts":["Aprobar los Presupuestos Generales del Estado","Aplicar los Presupuestos ya aprobados","Ejercer funciones de administración ordinaria"],"correct":0},{"q":"Además de los Presupuestos, ¿qué otra actuación tiene prohibida el Gobierno en funciones?","opts":["Presentar proyectos de ley a las Cortes","Ejecutar el gasto público ordinario","Firmar tratados internacionales de mero trámite"],"correct":0},{"q":"¿A quién corresponde la dirección de la Administración Militar?","opts":["Al Gobierno","Al Rey, como Jefe del Estado","Al Ministro de Defensa en exclusiva"],"correct":0},{"q":"¿A quién corresponde proponer y ejecutar la política del Gobierno en materia de Seguridad Ciudadana?","opts":["Al Ministerio del Interior (MIR)","A la Dirección General de la Policía","Al Congreso de los Diputados"],"correct":0},{"q":"Según el deber de consulta en materia de prevención de riesgos laborales, ¿con quién debe consultar el empresario sus decisiones preventivas?","opts":["Con los representantes de los trabajadores","Con la Inspección de Trabajo únicamente","Con el comité de empresa solo si hay accidente"],"correct":0},{"q":"¿Qué ejecuta un Secretario de Estado dentro de su ministerio?","opts":["La acción del Gobierno en un sector específico de actividad","La representación ordinaria del ministerio","La normativa general y la asistencia jurídica"],"correct":0},{"q":"¿Qué función corresponde principalmente al Ministro dentro de su departamento?","opts":["Dirigir la actividad administrativa del ministerio","Ostentar la representación ordinaria del ministerio","Gestionar áreas funcionalmente homogéneas"],"correct":0},{"q":"¿Qué órgano superior ostenta la representación ordinaria del ministerio y dirige los servicios comunes?","opts":["El Subsecretario","El Secretario General","El Director General"],"correct":0},{"q":"¿Qué órgano se encarga de la normativa, la asistencia jurídica y las publicaciones dentro de un ministerio?","opts":["La Secretaría General Técnica (SGT)","El Secretario General","El Subsecretario"],"correct":0},{"q":"¿Qué órgano directivo gestiona áreas funcionalmente homogéneas dentro de un ministerio?","opts":["El Director General","El Subdirector General","El Secretario General"],"correct":0},{"q":"¿A quién corresponde la titularidad exclusiva de la Seguridad Pública?","opts":["Al Estado","A las CCAA","A los Ayuntamientos"],"correct":0},{"q":"¿A través de qué órgano se ejercita la Seguridad Pública en las AAPP?","opts":["A través de las FCS","A través del Poder Judicial","A través del Ministerio Fiscal"],"correct":0},{"q":"¿Qué requisito de experiencia profesional exige la Constitución para ser Fiscal General del Estado?","opts":["Más de 15 años de ejercicio efectivo de la profesión","Más de 10 años de ejercicio efectivo","Más de 20 años de ejercicio efectivo"],"correct":0},{"q":"¿Cuánto tiempo debe transcurrir desde la presentación de una moción de censura hasta su votación?","opts":["Cinco días","Diez días","Quince días"],"correct":0},{"q":"¿Cuál de los siguientes NO forma parte del Sector Público Institucional según la clasificación indicada?","opts":["Un Ministerio","Una Agencia estatal","Un consorcio"],"correct":0},{"q":"¿Cuál de los siguientes SÍ es un organismo público vinculado o dependiente de la AGE según esta clasificación?","opts":["Un organismo autónomo","Un partido político","Un sindicato"],"correct":0},{"q":"¿Cuál de las siguientes es una medida privativa de libertad?","opts":["El internamiento en centro psiquiátrico","La libertad vigilada","La custodia familiar"],"correct":0},{"q":"¿Cuál de las siguientes es una medida NO privativa de libertad?","opts":["La privación del derecho a la tenencia y porte de armas","El internamiento en centro de deshabituación","El internamiento en centro educativo especial"],"correct":0},{"q":"En la medida de custodia familiar, ¿bajo la supervisión de qué órgano judicial se ejerce?","opts":["El Juez de Vigilancia Penitenciaria","El Juez de Instrucción","El Juez de lo Penal"],"correct":0},{"q":"Según la teoría del delito, ¿qué pregunta corresponde a la Tipicidad?","opts":["¿Está descrita la conducta en el Código Penal?","¿Está justificada la conducta?","¿Es la persona responsable o imputable?"],"correct":0},{"q":"¿Qué causa excluye la Tipicidad de una conducta?","opts":["El error de tipo invencible","El miedo insuperable","La excusa absolutoria"],"correct":0},{"q":"¿A qué elemento del delito corresponde la pregunta \"¿está justificada?\"?","opts":["La Antijuridicidad","La Culpabilidad","La Punibilidad"],"correct":0},{"q":"¿Cuál de las siguientes se recoge como causa relacionada con la Antijuridicidad en estas notas?","opts":["La alteración psíquica","La excusa absolutoria","El error de tipo invencible"],"correct":0},{"q":"¿A qué elemento del delito corresponde la pregunta \"¿es responsable o imputable?\"?","opts":["La Culpabilidad","La Tipicidad","La Punibilidad"],"correct":0},{"q":"¿Cuál de las siguientes es una causa relacionada con la Culpabilidad según estas notas?","opts":["El miedo insuperable","El error de tipo invencible","La minoría de edad"],"correct":0},{"q":"¿A qué elemento del delito corresponde la pregunta \"¿se puede castigar?\"?","opts":["La Punibilidad","La Tipicidad","La Antijuridicidad"],"correct":0},{"q":"¿Qué causa excluye la Punibilidad de una conducta?","opts":["La excusa absolutoria","El error de tipo invencible","El estado de necesidad"],"correct":0},{"q":"¿Cómo se denomina la garantía penal expresada como \"nullum crimen sine lege\"?","opts":["Garantía criminal","Garantía penal","Garantía procesal"],"correct":0},{"q":"¿Cómo se denomina la garantía penal \"nullum pena sine lege\"?","opts":["Garantía penal","Garantía criminal","Garantía de ejecución"],"correct":0},{"q":"¿Cómo se denomina la garantía que exige que no haya pena sin juicio previo?","opts":["Garantía procesal o judicial","Garantía criminal","Garantía penal"],"correct":0},{"q":"¿Qué garantía establece que la pena se ejecutará en la forma prescrita por la ley?","opts":["La garantía de ejecución","La garantía criminal","La garantía procesal"],"correct":0},{"q":"¿Cuál de los siguientes delitos admite actos preparatorios punibles?","opts":["El homicidio y el asesinato","La riña tumultuaria","Un delito leve de hurto"],"correct":0},{"q":"En los delitos que admiten actos preparatorios punibles, ¿en qué medida se reduce la pena?","opts":["En 1 o 2 grados","En 1 grado siempre","A la mitad exacta"],"correct":0},{"q":"¿La riña tumultuaria constituye un acto preparatorio punible?","opts":["No, no lo constituye","Sí, siempre que haya más de dos personas","Sí, solo si hay resultado de muerte"],"correct":0},{"q":"El lanzamiento de objetos peligrosos contra un agente de la autoridad, aunque no acierte, ¿cómo se califica?","opts":["Como atentado agravado (no como tentativa)","Como mera tentativa de atentado","Como falta administrativa"],"correct":0},{"q":"¿Tienen las personas jurídicas responsabilidad penal en el delito de aborto?","opts":["No","Sí, siempre","Solo si son sociedades mercantiles"],"correct":0},{"q":"En el procedimiento penal, para delitos con pena superior a 9 años, ¿qué procedimiento e instrucción corresponde?","opts":["Procedimiento ordinario, instrucción por Sumario","Procedimiento abreviado, Diligencias previas","Enjuiciamiento rápido, Diligencias urgentes"],"correct":0},{"q":"¿Qué procedimiento e instrucción corresponde a delitos con pena de hasta 9 años?","opts":["Procedimiento abreviado, Diligencias previas","Procedimiento ordinario, Sumario","Enjuiciamiento rápido, Diligencias urgentes"],"correct":0},{"q":"¿Qué procedimiento e instrucción corresponde a delitos con pena de hasta 5 años (enjuiciamiento rápido)?","opts":["Diligencias urgentes","Diligencias previas","Sumario"],"correct":0},{"q":"En el caso de los delitos leves, a diferencia de otros procedimientos, ¿qué particularidad se produce respecto a instrucción y enjuiciamiento?","opts":["El mismo órgano instruye y enjuicia","Siempre se separan instrucción y enjuiciamiento","Se instruyen por Sumario"],"correct":0},{"q":"¿Cuántas salas tiene el Tribunal Supremo?","opts":["5","4","3"],"correct":0},{"q":"¿Cuál de las siguientes NO es una sala del Tribunal Supremo?","opts":["De Extranjería","Militar","Contencioso-Administrativa"],"correct":0},{"q":"¿Cuántas salas tiene la Audiencia Nacional?","opts":["4","5","3"],"correct":0},{"q":"¿Cuál de las siguientes NO es una sala de la Audiencia Nacional?","opts":["Civil","Penal","Social"],"correct":0},{"q":"¿Cuántas salas tiene el Tribunal Superior de Justicia?","opts":["3","4","5"],"correct":0},{"q":"En el Tribunal Superior de Justicia, ¿qué dos jurisdicciones comparten una misma Sala (Sala Común)?","opts":["Civil y Penal","Contencioso-Administrativo y Social","Penal y Social"],"correct":0},{"q":"¿Cómo se denomina la fuente de inteligencia procedente de imágenes e información geográfica?","opts":["IMINT","SIGINT","HUMINT"],"correct":0},{"q":"¿Cómo se denomina la fuente de inteligencia procedente de fuentes técnicas?","opts":["SIGINT","IMINT","HUMINT"],"correct":0},{"q":"¿Cómo se denomina la fuente de inteligencia procedente de fuentes humanas?","opts":["HUMINT","SIGINT","IMINT"],"correct":0},{"q":"¿Cuál de los siguientes es un principio que rige los registros corporales?","opts":["La injerencia mínima","La discrecionalidad policial","La reserva absoluta"],"correct":0},{"q":"Cuando el registro corporal es coactivo, ¿qué principios se aplican (mnemotecnia P.I.N.)?","opts":["Proporcionalidad, idoneidad y necesidad","Proporcionalidad, igualdad y no discriminación","Publicidad, idoneidad y notificación"],"correct":0},{"q":"¿Cuál es la duración máxima de la detención preventiva de un adulto?","opts":["72 horas","48 horas","24 horas"],"correct":0},{"q":"¿Qué expresión ha de cumplir siempre la detención preventiva, además del plazo máximo de 72h?","opts":["Ser estrictamente necesaria","Ser autorizada previamente por el juez","Ser comunicada al Defensor del Pueblo"],"correct":0},{"q":"¿Cómo se define la extorsión?","opts":["Un acto o negocio jurídico realizado con ánimo de lucro","Impedir hacer lo que la ley no prohíbe","Compeler a hacer lo que no se quiere"],"correct":0},{"q":"¿Cómo se define la coacción?","opts":["Impedir hacer lo que la ley no prohíbe, o compeler a hacer lo que no se quiere","Un negocio jurídico realizado con ánimo de lucro","Un delito exclusivamente patrimonial"],"correct":0},{"q":"¿Puede el Tribunal del Jurado enjuiciar delitos competencia de la Audiencia Nacional?","opts":["No, nunca","Sí, siempre","Solo delitos de terrorismo"],"correct":0},{"q":"¿Puede la Audiencia Provincial ser objeto de enjuiciamiento por el Tribunal del Jurado?","opts":["Sí","No, nunca","Solo en delitos leves"],"correct":0},{"q":"¿Qué se entiende por \"accidente blanco\"?","opts":["Aquel en el que solo hay daños a bienes, no a personas","Aquel en el que interviene un vehículo oficial","Un accidente sin testigos"],"correct":0},{"q":"¿En cuántas fases se estructura el servicio de asistencia a víctimas?","opts":["4","3","5"],"correct":0},{"q":"¿Cuál es el plazo inicial máximo para la interceptación de comunicaciones telefónicas como medida de investigación tecnológica?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"¿Hasta cuánto se puede prorrogar la interceptación de comunicaciones telefónicas?","opts":["Hasta 18 meses","Hasta 12 meses","Hasta 24 meses"],"correct":0},{"q":"En caso de urgencia, ¿de cuánto tiempo se dispone para la interceptación de correspondencia o comunicaciones telefónicas?","opts":["72 horas","24 horas","48 horas"],"correct":0},{"q":"¿Qué plazo específico tiene la grabación oral de encuentros como medida de investigación tecnológica?","opts":["No tiene plazo específico","3 meses prorrogables a 18","72 horas de urgencia"],"correct":0},{"q":"En la medida de seguimiento y localización, ¿cuál es el plazo de urgencia?","opts":["24 horas","72 horas","48 horas"],"correct":0},{"q":"Los dispositivos de captación masiva de datos, ¿de qué plazo de urgencia disponen (sin plazo inicial ni de prórroga)?","opts":["72 horas","24 horas","1 mes"],"correct":0},{"q":"¿Cuál es el plazo inicial de los registros remotos de equipos informáticos?","opts":["1 mes","3 meses","6 meses"],"correct":0},{"q":"¿Hasta cuánto se puede prorrogar un registro remoto de equipos informáticos?","opts":["Hasta 3 meses","Hasta 18 meses","Hasta 6 meses"],"correct":0},{"q":"¿Cuál de los siguientes es un principio rector de las medidas de investigación tecnológica?","opts":["La proporcionalidad","La discrecionalidad","La reserva de jurisdicción exclusiva"],"correct":0},{"q":"¿Cuál de los siguientes NO figura entre los principios rectores de las medidas de investigación tecnológica?","opts":["La publicidad","La idoneidad","La excepcionalidad"],"correct":0},{"q":"Ante una falta administrativa (Tema 26, LO 7/2021 - LO 3/2018), ¿en qué plazo debe actuarse?","opts":["De forma inmediata","En 72 horas","En 10 días"],"correct":0},{"q":"Ante la solicitud del interesado, ¿cuál es el plazo máximo de respuesta?","opts":["Inmediato, máximo 1 mes","3 meses","10 días"],"correct":0},{"q":"¿En qué plazo debe actuarse ante el uso de videocámaras móviles?","opts":["24 horas","72 horas","10 días"],"correct":0},{"q":"¿En qué plazo debe actuarse cuando los hechos pueden constituir delito penal?","opts":["72 horas","24 horas","1 mes"],"correct":0},{"q":"Si existen dudas sobre la identidad del solicitante, ¿de qué plazo se dispone?","opts":["10 días","5 días","24 horas"],"correct":0},{"q":"¿Cuál es el plazo para la admisión o inadmisión de una reclamación ante la AEPD según el Tema 26?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"Según la LO 7/2021, ¿cuántas solicitudes repetitivas sobre el mismo supuesto se permiten y en qué plazo?","opts":["3 en 6 horas","1 en 6 meses","3 en 6 meses"],"correct":0},{"q":"Según la LO 3/2018, ¿cuántas solicitudes repetitivas se permiten y en qué plazo?","opts":["+1 en 6 meses","3 en 6 horas","+1 en 12 meses"],"correct":0},{"q":"En protección de datos, ante un menor fallecido, ¿cómo se puede actuar?","opts":["De oficio o a instancia de parte interesada","Solo a instancia de parte interesada","Solo de oficio"],"correct":0},{"q":"Según la LO 7/2021, si la Administración no contesta en el plazo previsto, ¿qué efecto tiene el silencio?","opts":["Se entiende desestimada la solicitud","Se entiende estimada la solicitud","Se reinicia el plazo automáticamente"],"correct":0},{"q":"Según la LO 7/2021, ¿cuál es el plazo de caducidad de los procedimientos?","opts":["6 meses","12 meses","3 meses"],"correct":0},{"q":"Según la LO 3/2018, en las reclamaciones ante la AEPD, ¿de qué plazo dispone la Administración para responder?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"Según la LO 3/2018, ¿qué efecto tiene el silencio administrativo en las reclamaciones ante la AEPD?","opts":["Silencio positivo","Silencio negativo","No se contempla el silencio administrativo"],"correct":0},{"q":"Según la LO 3/2018, ¿cuál es el plazo de caducidad de los procedimientos sancionadores?","opts":["12 meses","6 meses","3 meses"],"correct":0},{"q":"¿En cuánto tiempo se reconocen los derechos del interesado tras admitirse una reclamación ante la AEPD?","opts":["6 meses","3 meses","12 meses"],"correct":0},{"q":"¿Quién puede nombrar al Delegado de Protección de Datos?","opts":["Tanto el encargado como el responsable del tratamiento","Solo el responsable del tratamiento","Solo la AEPD"],"correct":0},{"q":"Según la LO 4/2015 de Seguridad Ciudadana, ¿en qué plazo prescriben las infracciones muy graves?","opts":["2 años","1 año","3 años"],"correct":0},{"q":"Según la LO 4/2015, ¿en qué plazo prescriben las sanciones muy graves?","opts":["3 años","2 años","5 años"],"correct":0},{"q":"Según la LO 4/2000 de Extranjería, ¿en qué plazo prescriben las infracciones muy graves?","opts":["3 años","2 años","6 meses"],"correct":0},{"q":"Según la LO 4/2000 de Extranjería, ¿en qué plazo prescriben las sanciones muy graves?","opts":["5 años","3 años","2 años"],"correct":0},{"q":"Según la Ley 5/2014 de Seguridad Privada, ¿en qué plazo prescriben las infracciones muy graves?","opts":["2 años","1 año","3 años"],"correct":0},{"q":"Según la Ley 5/2014 de Seguridad Privada, ¿en qué plazo prescriben las sanciones muy graves?","opts":["4 años","3 años","2 años"],"correct":0},{"q":"Según la LO 4/2010 de Régimen del CNP, ¿en qué plazo prescriben las infracciones y sanciones muy graves?","opts":["3 años","2 años","1 año"],"correct":0},{"q":"Según la LO 4/2010, ¿cuál es el plazo de prescripción de las infracciones y sanciones leves?","opts":["1 mes","6 meses","1 año"],"correct":0},{"q":"Según la LO 3/2018 de Protección de Datos, ¿en qué plazo prescriben las infracciones y sanciones muy graves?","opts":["3 años","2 años","1 año"],"correct":0},{"q":"Según la LO 3/2018, ¿cuál es el plazo de prescripción de las infracciones y sanciones leves?","opts":["1 año","6 meses","2 años"],"correct":0},{"q":"Según la LO 7/2021 de Protección de Datos, ¿en qué plazo prescriben las infracciones muy graves?","opts":["3 años","2 años","6 meses"],"correct":0},{"q":"Según la LO 7/2021, ¿en qué plazo prescriben las sanciones muy graves?","opts":["3 años","2 años","1 año"],"correct":0},{"q":"¿Mediante qué instrumento se crea el cargo de Ministro?","opts":["Real Decreto del Presidente del Gobierno","Real Decreto del Consejo de Ministros","Ley Orgánica"],"correct":0},{"q":"¿Quién nombra a los Ministros?","opts":["El Rey, a propuesta del Presidente del Gobierno","El Consejo de Ministros","Las Cortes Generales"],"correct":0},{"q":"¿Mediante qué instrumento se crea el cargo de Secretario de Estado?","opts":["Real Decreto del Presidente del Gobierno","Real Decreto del Consejo de Ministros","Orden Ministerial"],"correct":0},{"q":"¿Quién nombra a los Secretarios de Estado?","opts":["RD del Consejo de Ministros, a propuesta del Presidente o del ministerio del que dependen","El Rey directamente","Las Cortes Generales"],"correct":0},{"q":"¿Cómo se crean los órganos directivos y a iniciativa/propuesta de quién?","opts":["RD del Consejo de Ministros, a iniciativa del Ministro interesado y propuesta del Ministerio de Transformación y Función Pública","Orden del Ministro interesado","RD del Presidente del Gobierno"],"correct":0},{"q":"¿Quién propone el nombramiento del Subsecretario, siendo obligatorio su nombramiento?","opts":["El titular del Ministerio","El Presidente del Gobierno","El Consejo de Ministros de oficio"],"correct":0},{"q":"¿Quién puede proponer el nombramiento del Secretario General de un ministerio?","opts":["El titular del Ministerio o el Presidente","Solo el Consejo de Ministros de oficio","Solo las Cortes Generales"],"correct":0},{"q":"¿Es obligatorio el nombramiento de un Secretario General Técnico y quién lo propone?","opts":["Sí, es obligatorio, lo propone el titular del Ministerio","No es obligatorio","Lo propone el Presidente del Gobierno"],"correct":0},{"q":"¿Quién propone el nombramiento de un Director General?","opts":["El titular del Ministerio o el Presidente","El Subsecretario en exclusiva","El Consejo de Ministros de oficio"],"correct":0},{"q":"¿Quién nombra directamente al Subdirector General?","opts":["El Ministro, el Secretario de Estado o el Subsecretario","El Consejo de Ministros","El Rey"],"correct":0},{"q":"¿Cuántos años de validez tiene el carné o licencia de tipo D?","opts":["5 años","10 años","3 años"],"correct":0},{"q":"¿Cómo se denominan los espacios donde están los presos y los funcionarios de tipo M1/M2?","opts":["Compartimentos","Módulos","Celdas de tránsito"],"correct":0},{"q":"¿Qué recurso administrativo se dirige a un superior jerárquico, contra actos que NO ponen fin a la vía administrativa?","opts":["El recurso de alzada","El recurso de reposición","El recurso de revisión"],"correct":0},{"q":"¿Qué recurso administrativo se dirige contra actos que SÍ ponen fin a la vía administrativa?","opts":["El recurso de reposición","El recurso de alzada","El recurso de reexamen"],"correct":0},{"q":"¿Qué recurso administrativo procede cuando aparecen nuevos documentos o hay errores en sentencias firmes o cerradas?","opts":["El recurso de revisión","El recurso de alzada","El recurso de reposición"],"correct":0},{"q":"¿En qué ámbito se aplica el recurso de reexamen y en qué plazos?","opts":["Puestos fronterizos y CIE, 2 días de solicitud y 2 días de resolución","Vía administrativa general, 1 mes","Solo en materia de extranjería general, 10 días"],"correct":0},{"q":"Según la clasificación de licencias de armas Tipo F, ¿cuántas armas permite la 1ª categoría?","opts":["Hasta 10 armas","Hasta 6 armas","1 arma corta o larga"],"correct":0},{"q":"¿Cuántas armas permite la 2ª categoría de la licencia Tipo F?","opts":["Hasta 6 armas","Hasta 10 armas","1 arma"],"correct":0},{"q":"¿Qué permite la 3ª categoría de la licencia Tipo F?","opts":["1 arma corta o 1 arma larga","Hasta 6 armas","Hasta 10 armas"],"correct":0},{"q":"¿Por qué se rigen las corporaciones?","opts":["Por Leyes","Por Estatutos","Por Reglas"],"correct":0},{"q":"¿Por qué se rigen las asociaciones?","opts":["Por Estatutos","Por Leyes","Por Reglas"],"correct":0},{"q":"¿Por qué se rigen las fundaciones?","opts":["Por Reglas","Por Estatutos","Por Leyes"],"correct":0},{"q":"En caso de fallecimiento comprobado sin supervivientes, ¿en qué plazo se declara el fallecimiento?","opts":["De forma inmediata","En 8 días","En 1 mes"],"correct":0},{"q":"En caso de fallecimiento comprobado en el que puede haber supervivientes, ¿qué plazo se aplica?","opts":["8 días","Inmediato","1 mes"],"correct":0},{"q":"En caso de siniestro presunto de aeronave o barco, ¿qué plazo se aplica para la declaración de fallecimiento?","opts":["1 mes","3 meses","8 días"],"correct":0},{"q":"En caso de siniestro sin barco ni aeronave, ¿qué plazo se aplica?","opts":["3 meses","1 mes","1 año"],"correct":0},{"q":"En caso de riesgo de muerte por violencia, ¿qué plazo se aplica para la declaración de fallecimiento?","opts":["1 año","2 años","6 meses"],"correct":0},{"q":"En caso de desaparición en campaña (militar), ¿qué plazo se aplica?","opts":["2 años","1 año","5 años"],"correct":0},{"q":"Si el desaparecido tiene más de 75 años, ¿qué plazo se aplica desde la desaparición?","opts":["5 años","2 años","10 años"],"correct":0},{"q":"En caso de desaparición general (sin otras circunstancias específicas), ¿qué plazo se aplica?","opts":["10 años","5 años","2 años"],"correct":0},{"q":"En la emancipación por concesión paterna, ¿qué requisito se exige respecto al consentimiento y registro?","opts":["El menor la consiente y se inscribe en el Registro Civil","La otorga directamente el juez sin consentimiento del menor","No requiere inscripción registral"],"correct":0},{"q":"¿A partir de qué edad puede el menor pedir la emancipación por concesión judicial?","opts":["16 años","14 años","18 años"],"correct":0},{"q":"¿Cuál de las siguientes es una causa para conceder la emancipación judicial?","opts":["Que los padres estén separados","Que el menor tenga más de 12 años","Que el menor esté trabajando"],"correct":0},{"q":"En la emancipación por vida independiente, ¿qué papel tienen los padres?","opts":["Consienten, y es la única forma revocable","No intervienen en absoluto","Deben solicitarla ellos mismos"],"correct":0},{"q":"¿De quién depende el Registro Nacional de Asociaciones?","opts":["De la Secretaría General Técnica (SGT)","De la Dirección General de la Policía","Del Ministerio de Justicia en exclusiva"],"correct":0},{"q":"¿Qué ramas del derecho integran el llamado \"Derecho Privado\" según estas notas?","opts":["El Derecho Civil y el Mercantil","El Derecho Civil y el Administrativo","El Derecho Civil y el Penal"],"correct":0},{"q":"En el régimen comunitario (RD 240/2007), ¿en qué plazo debe realizarse la inscripción en el RCE desde la entrada?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"El familiar no comunitario, ¿en qué plazo debe solicitar la tarjeta de residencia?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"¿Cuál es el plazo de caducidad del certificado de registro en el régimen comunitario?","opts":["6 meses en 1 año","3 meses en 1 año","1 año completo"],"correct":0},{"q":"¿Cuánto tiempo debe transcurrir desde su ejecución para poder levantar una prohibición de entrada?","opts":["3 años","1 año","5 años"],"correct":0},{"q":"¿Cuál es el plazo general de resolución en el régimen comunitario (RD 240/2007)?","opts":["3 meses","1 mes","6 meses"],"correct":0},{"q":"Tras 6 meses de residencia, ¿en qué plazo debe solicitarse el TIE?","opts":["1 mes","3 meses","15 días"],"correct":0},{"q":"¿Cada cuánto se renueva la RLD (residencia de larga duración) de un menor de 30 años?","opts":["Cada 5 años","Cada 10 años","Cada 2 años"],"correct":0},{"q":"¿Cada cuánto se renueva la RLD de un mayor de 30 años?","opts":["Cada 10 años","Cada 5 años","Cada 3 años"],"correct":0},{"q":"¿Cuál es el margen de tiempo para renovar el TIE, antes o después de su caducidad?","opts":["2 meses antes o hasta 3 meses después","1 mes antes o hasta 1 mes después","3 meses antes o hasta 2 meses después"],"correct":0},{"q":"Si se deniega una prórroga de estancia sin visado, ¿de qué plazo se dispone para salir del territorio?","opts":["72 horas","24 horas","15 días"],"correct":0},{"q":"¿En qué plazo debe facilitarse la información del Registro Central de penados e infracciones policiales?","opts":["5 días","10 días","24 horas"],"correct":0},{"q":"En materia de trata de seres humanos (TSH), ¿cuál es el período mínimo de reflexión?","opts":["90 días","30 días","60 días"],"correct":0},{"q":"En materia de TSH, ¿de qué plazo dispone el delegado o subdelegado del Gobierno para resolver?","opts":["5 días","24 horas","10 días"],"correct":0},{"q":"Si la víctima de TSH se encuentra en un CIE, ¿en qué plazo debe resolverse?","opts":["24 horas","72 horas","5 días"],"correct":0},{"q":"En materia de TSH, ¿qué efecto tiene el silencio administrativo?","opts":["Positivo","Negativo","No se contempla"],"correct":0},{"q":"Respecto a los MENA, ¿cuál es el plazo máximo de repatriación?","opts":["6 meses","3 meses","1 año"],"correct":0},{"q":"Si no hay retorno efectivo de un MENA, ¿en qué plazo se inicia el trámite de residencia?","opts":["90 días","6 meses","30 días"],"correct":0},{"q":"Con carácter general, ¿por cuánto tiempo se concede la autorización de un arraigo?","opts":["1 año","5 años","2 años"],"correct":0},{"q":"¿Cuál es la excepción entre los arraigos que se concede por 5 años?","opts":["El arraigo familiar","El arraigo social","El arraigo laboral"],"correct":0},{"q":"Según la clasificación de la residencia por tiempo, ¿qué motivos permiten denegar/expulsar en la residencia general (menos de 5 años)?","opts":["Orden público, seguridad y salud pública","Razones graves de seguridad pública","Razones imperiosas de seguridad pública"],"correct":0},{"q":"En la residencia permanente (entre 5 y 10 años), ¿qué tipo de razones son necesarias para la expulsión?","opts":["Razones graves de seguridad pública","Orden público y salud pública","Razones imperiosas de seguridad pública"],"correct":0},{"q":"En la residencia de larga duración (más de 10 años), ¿qué tipo de razones son necesarias para la expulsión?","opts":["Razones imperiosas de seguridad pública","Razones graves de seguridad pública","Orden público y salud pública"],"correct":0},{"q":"¿En qué plazo debe solicitarse la condición de apátrida desde la entrada en España?","opts":["1 mes","3 meses","90 días"],"correct":0},{"q":"Salvo Real Decreto-Ley que diga lo contrario, ¿cada cuánto se renueva la residencia temporal no lucrativa?","opts":["2 años","1 año","5 años"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Tratado de París, fundacional de la CECA?","opts":["1951/1952","1957/1958","1965/1967"],"correct":0},{"q":"El Tratado de París dio lugar a la CECA formada por 6 países. ¿A qué plan responde este tratado?","opts":["Al Plan Schuman","Al Plan Marshall","Al Plan Werner"],"correct":0},{"q":"¿En qué años se firmaron y entraron en vigor los Tratados de Roma?","opts":["1957/1958","1951/1952","1986/1987"],"correct":0},{"q":"¿Qué instituciones/organismos crearon los Tratados de Roma?","opts":["La CEE y el Euratom","La CECA y el Parlamento Europeo","La Unión Europea y el BCE"],"correct":0},{"q":"¿En qué años se produjo el Tratado de Fusión (de Bruselas)?","opts":["1965/1967","1957/1958","1986/1987"],"correct":0},{"q":"¿Qué unificó el Tratado de Fusión de Bruselas?","opts":["La Comisión y el Consejo de la CECA, el Euratom y la CEE","El mercado único y la moneda común","La política exterior y de seguridad común"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Acta Única Europea?","opts":["1986/1987","1992/1993","1997/1999"],"correct":0},{"q":"¿Qué introdujo el Acta Única Europea, además de la adhesión de España y Portugal?","opts":["La mayoría cualificada y el carácter oficial del Parlamento Europeo","La ciudadanía europea","El euro como moneda única"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Tratado de Maastricht?","opts":["1992/1993","1986/1987","1997/1999"],"correct":0},{"q":"¿Qué creó el Tratado de Maastricht, entre otras instituciones y conceptos?","opts":["La Unión Europea y la ciudadanía de la UE","El Espacio Schengen","El Parlamento Europeo"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Tratado de Ámsterdam?","opts":["1997/1999","2001/2003","1992/1993"],"correct":0},{"q":"¿Qué incorporó el Tratado de Ámsterdam?","opts":["El acervo Schengen y la PESC","La Unión Europea y el BCE","La mayoría cualificada"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Tratado de Niza?","opts":["2001/2003","1997/1999","2007/2009"],"correct":0},{"q":"¿Qué cambio en el número de miembros supuso el Tratado de Niza?","opts":["De 15 a 25 miembros","De 6 a 15 miembros","De 25 a 27 miembros"],"correct":0},{"q":"¿En qué años se firmó y entró en vigor el Tratado de Lisboa?","opts":["2007/2009","2001/2003","1997/1999"],"correct":0},{"q":"¿Qué otorgó el Tratado de Lisboa a la Unión Europea?","opts":["Personalidad jurídica única","La moneda única","El Espacio Schengen"],"correct":0},{"q":"¿Qué órgano resuelve las cuestiones prejudiciales planteadas por tribunales nacionales de la UE?","opts":["El Tribunal de Justicia","El Tribunal General","El Tribunal Europeo de Derechos Humanos"],"correct":0},{"q":"¿Qué órgano de la UE resuelve las cuestiones entre particulares?","opts":["El Tribunal General","El Tribunal de Justicia","El Tribunal Europeo de Derechos Humanos"],"correct":0},{"q":"¿En qué rango de porcentaje se sitúa la mayoría cualificada en el Consejo de la UE?","opts":["55% - 65%","50% - 60%","60% - 70%"],"correct":0},{"q":"Dentro de las fuentes del derecho de la UE, ¿qué acto tiene alcance general, es obligatorio y directamente aplicable?","opts":["El Reglamento","La Directiva","La Recomendación"],"correct":0},{"q":"¿Qué acto de la UE obliga en cuanto al objetivo a conseguir, pero no en la forma ni los medios?","opts":["La Directiva","El Reglamento","La Decisión"],"correct":0},{"q":"¿Qué acto de la UE es obligatorio en todos sus elementos?","opts":["La Decisión","La Directiva","La Recomendación"],"correct":0},{"q":"¿Qué carácter tienen las recomendaciones y dictámenes de la UE?","opts":["No son vinculantes","Son de aplicación directa","Son obligatorios solo para los Estados miembros"],"correct":0},{"q":"¿Cuál es el mandato del Supervisor Europeo de Protección de Datos?","opts":["5 años","9 años","3 años"],"correct":0},{"q":"¿Qué corresponde al primer pilar del Tratado de Maastricht?","opts":["Las Comunidades Europeas","La PESC","La JAI"],"correct":0},{"q":"¿Qué corresponde al segundo pilar del Tratado de Maastricht?","opts":["La PESC","Las Comunidades Europeas","La JAI"],"correct":0},{"q":"¿Qué corresponde al tercer pilar del Tratado de Maastricht?","opts":["La JAI","La PESC","Las Comunidades Europeas"],"correct":0},{"q":"¿En qué año se creó el Consejo de Europa?","opts":["1949","1951","1957"],"correct":0},{"q":"¿Qué tratado se firmó en 1951, dando origen a la CECA?","opts":["El Tratado de París","El Tratado de Roma","El Tratado de Maastricht"],"correct":0},{"q":"¿Qué tratado establece formalmente la Unión Europea?","opts":["El Tratado de Maastricht","El Tratado de Lisboa","El Tratado de Roma"],"correct":0},{"q":"¿En qué año y ciudad se celebró la primera Cumbre de Desarrollo Sostenible?","opts":["1972, Estocolmo","1992, Río de Janeiro","2002, Johannesburgo"],"correct":0},{"q":"¿Qué informe publicó el Club de Roma, que definió por primera vez el término \"desarrollo sostenible\"?","opts":["\"Los límites del crecimiento\"","\"Nuestro futuro común\"","\"El futuro que queremos\""],"correct":0},{"q":"¿En qué año y ciudad se celebró la segunda Cumbre de Desarrollo Sostenible?","opts":["1992, Río de Janeiro","1972, Estocolmo","2012, Río de Janeiro"],"correct":0},{"q":"¿En qué año y ciudad se celebró la tercera Cumbre (Río+10)?","opts":["2002, Johannesburgo","1992, Río de Janeiro","2012, Río de Janeiro"],"correct":0},{"q":"¿En qué año y ciudad se celebró la cuarta Cumbre (Río+20) y qué documento produjo?","opts":["2012, Río de Janeiro, \"El futuro que queremos\"","2002, Johannesburgo, \"Nuestro futuro común\"","1992, Río de Janeiro, \"Los límites del crecimiento\""],"correct":0},{"q":"¿En qué cumbre (COP) se estableció el límite del calentamiento global por debajo de 2°C, y en qué año?","opts":["COP21, 2015","COP15, 2009","COP26, 2021"],"correct":0},{"q":"¿Cómo se denomina el marco de Objetivos de Desarrollo Sostenible adoptado tras la COP21?","opts":["Agenda 2030","Agenda 2050","Agenda de Johannesburgo"],"correct":0},{"q":"¿Cuántos artículos y preámbulos tiene la Declaración Universal de los Derechos Humanos?","opts":["1 preámbulo y 30 artículos","1 preámbulo y 37 artículos","2 preámbulos y 30 artículos"],"correct":0},{"q":"¿Dónde tiene su sede el Consejo de Derechos Humanos de la ONU?","opts":["Ginebra","Nueva York","Estrasburgo"],"correct":0},{"q":"¿Cómo se estructuran las reuniones del Consejo de Derechos Humanos a lo largo del año?","opts":["3 periodos de 10 semanas","4 periodos de 8 semanas","2 periodos de 15 semanas"],"correct":0},{"q":"¿Cuántos miembros componen el Consejo de Derechos Humanos de la ONU?","opts":["47","46","27"],"correct":0},{"q":"¿Por cuántos años son elegidos los miembros del Consejo de Derechos Humanos?","opts":["3 años","5 años","9 años"],"correct":0},{"q":"¿Cómo se compone la Mesa del Consejo de Derechos Humanos?","opts":["1 presidente y 4 vicepresidentes","1 presidente y 2 vicepresidentes","Un presidente rotatorio anual sin vicepresidentes"],"correct":0},{"q":"¿Ante quién presenta el Consejo de Derechos Humanos su informe anual?","opts":["Ante la ONU","Ante el Consejo de Europa","Ante el TEDH"],"correct":0},{"q":"¿Cuántos Estados forman el Consejo de Europa, el TEDH y el CPT?","opts":["46","47","27"],"correct":0},{"q":"¿Cuántos Estados forman el Consejo de Derechos Humanos de la ONU?","opts":["47","46","27"],"correct":0},{"q":"¿En cuántos periodos de sesiones se organiza el Subcomité para la Prevención de la Tortura?","opts":["3","4","2"],"correct":0},{"q":"¿Cuántos artículos, además del preámbulo, tiene el Protocolo del Convenio contra la Tortura?","opts":["37","30","46"],"correct":0},{"q":"¿Con qué evento se relaciona la Contracumbre de Génova de 2001?","opts":["La reunión del G8","La COP21","La Cumbre de Río+10"],"correct":0},{"q":"¿Cuál es el número mínimo de personas en las visitas del SPT y el CPT?","opts":["2 personas","3 personas","5 personas"],"correct":0},{"q":"¿Cuál es el número máximo de personas propuestas por los estados para las visitas del SPT y el CPT?","opts":["5 personas","2 personas","10 personas"],"correct":0},{"q":"¿Cuál es la finalidad principal del Fondo Monetario Internacional (FMI)?","opts":["La estabilidad monetaria","La reducción de la pobreza","La cooperación policial internacional"],"correct":0},{"q":"¿Cuál es la finalidad principal del Banco Mundial?","opts":["La reducción de la pobreza","La estabilidad monetaria","La regulación del comercio internacional"],"correct":0},{"q":"Según la pirámide de necesidades de Maslow, ¿qué necesidad se sitúa en la base?","opts":["La fisiológica","La de seguridad","La de afiliación"],"correct":0},{"q":"¿Qué necesidad se sitúa en la cúspide de la pirámide de Maslow?","opts":["La autorrealización","El reconocimiento","La afiliación"],"correct":0},{"q":"Según Maslow, ¿cuáles son las llamadas \"necesidades de déficit\"?","opts":["La fisiológica y la de seguridad","La afiliación y el reconocimiento","El reconocimiento y la autorrealización"],"correct":0},{"q":"Según Maslow, ¿cuáles son las llamadas \"necesidades de ser\" o de crecimiento?","opts":["Afiliación, reconocimiento y autorrealización","Fisiológica y seguridad","Solo la autorrealización"],"correct":0},{"q":"¿Qué necesidad de Maslow ocupa la tercera posición, entre seguridad y reconocimiento?","opts":["La afiliación","La autorrealización","La fisiológica"],"correct":0},{"q":"Según los estadios de Kohlberg, en el nivel preconvencional, ¿en qué se basa el primer estadio?","opts":["En la obediencia y el castigo (miedo)","En favorecer los propios intereses","En las expectativas interpersonales"],"correct":0},{"q":"En el nivel preconvencional de Kohlberg, ¿en qué se basa el segundo estadio?","opts":["En favorecer los propios intereses","En la obediencia y el castigo","En las normas sociales"],"correct":0},{"q":"En el nivel convencional de Kohlberg, ¿en qué se basa el primer estadio?","opts":["En las expectativas interpersonales","En las normas sociales","En los principios éticos"],"correct":0},{"q":"En el nivel convencional de Kohlberg, ¿en qué se basa el segundo estadio?","opts":["En las normas sociales","En las expectativas interpersonales","En los derechos prioritarios"],"correct":0},{"q":"En el nivel postconvencional de Kohlberg, ¿en qué se basa el primer estadio?","opts":["En los derechos prioritarios","En los principios éticos","En las normas sociales"],"correct":0},{"q":"En el nivel postconvencional de Kohlberg, ¿en qué se basa el segundo estadio?","opts":["En los principios éticos","En los derechos prioritarios","En la obediencia y el castigo"],"correct":0},{"q":"¿A qué autores se atribuye la Teoría de los Rumores?","opts":["Allport y Postman","Pettigrew y Meertens","Wirth y Ratzel"],"correct":0},{"q":"En los procesos de aculturación, ¿qué ocurre en la \"asimilación\"?","opts":["El inmigrante pierde su identidad al incorporarse a la sociedad","El inmigrante mantiene su identidad e integra nuevos elementos","La cultura superior absorbe a la inferior"],"correct":0},{"q":"¿Qué diferencia a la \"aculturación\" de la \"asimilación\"?","opts":["En la aculturación se integran elementos, pero NO se pierde la identidad","En la aculturación se pierde totalmente la identidad","No existe diferencia entre ambos conceptos"],"correct":0},{"q":"¿Qué ocurre en el fenómeno de \"transculturación\"?","opts":["La cultura superior absorbe a la inferior","Se integran elementos sin perder identidad","Se pierde totalmente la identidad propia"],"correct":0},{"q":"¿A qué autor se atribuye la definición de ciudad basada en \"heterogéneos\"?","opts":["Wirth","Ratzel","Sorre"],"correct":0},{"q":"¿A qué autor se atribuye la definición de ciudad basada en \"grandes vías comerciales\"?","opts":["Ratzel","Wirth","Sorre"],"correct":0},{"q":"¿A qué autor se atribuye la definición de ciudad basada en \"organización social\"?","opts":["Sorre","Wirth","Ratzel"],"correct":0},{"q":"¿Cómo se denomina el tipo de racismo en el que se cree que existe una jerarquía de razas?","opts":["Racismo tradicional","Racismo simbólico","Racismo aversivo"],"correct":0},{"q":"¿Cómo se denomina el tipo de racismo en el que no se considera racista, pero se opone a políticas de igualdad racial?","opts":["Racismo simbólico","Racismo moderno","Racismo latente"],"correct":0},{"q":"¿Cómo se denomina el racismo en el que las minorías se perciben como una amenaza a los valores de la mayoría?","opts":["Racismo moderno","Racismo simbólico","Racismo tradicional"],"correct":0},{"q":"¿Cómo se denomina el racismo en el que la persona cree honestamente en la igualdad pero se siente incómoda ante otras razas?","opts":["Racismo aversivo","Racismo ambivalente","Racismo latente"],"correct":0},{"q":"¿Cómo se denomina el racismo que está presente pero no se manifiesta abiertamente?","opts":["Racismo latente","Racismo aversivo","Racismo sutil"],"correct":0},{"q":"¿Cómo se denomina el racismo en el que coexisten sentimientos positivos y negativos a la vez?","opts":["Racismo ambivalente","Racismo latente","Racismo moderno"],"correct":0},{"q":"¿Cómo se denomina el racismo que no ataca de frente, sino que actúa defendiendo valores tradicionales?","opts":["Racismo sutil","Racismo latente","Racismo aversivo"],"correct":0},{"q":"¿A qué autores se atribuye el concepto de \"racismo sutil\"?","opts":["Pettigrew y Meertens","Allport y Postman","Wirth y Sorre"],"correct":0},{"q":"Según la pirámide de Davenport y Prusak, ¿qué nivel ocupa la posición más alta?","opts":["La inteligencia","El dato","La información"],"correct":0},{"q":"Según la pirámide de Davenport y Prusak, ¿qué nivel ocupa la base de la pirámide?","opts":["El dato","La inteligencia","El conocimiento"],"correct":0},{"q":"Dentro de la clasificación legal de armas, ¿a qué categoría corresponde el arma corta?","opts":["Categoría 1","Categoría 2.1","Categoría 5.1"],"correct":0},{"q":"¿A qué categoría corresponden las armas de fuego largas destinadas a vigilancia y guardería?","opts":["Categoría 2.1","Categoría 2.2","Categoría 3.1"],"correct":0},{"q":"¿A qué categoría corresponden las armas de fuego largas rayadas (sin uso deportivo específico)?","opts":["Categoría 2.2","Categoría 2.1","Categoría 3.2"],"correct":0},{"q":"¿A qué categoría corresponden las armas de fuego largas rayadas para tiro deportivo, calibre 5,6mm de percusión anular?","opts":["Categoría 3.1","Categoría 2.2","Categoría 3.3"],"correct":0},{"q":"¿A qué categoría corresponden las escopetas y demás armas de ánima lisa o con cañón rayado (plomeo)?","opts":["Categoría 3.2","Categoría 3.1","Categoría 3.3"],"correct":0},{"q":"¿A qué categoría corresponden las armas accionadas por aire o gas comprimido que no superen 24,2 julios?","opts":["Categoría 3.3","Categoría 4.1","Categoría 3.2"],"correct":0},{"q":"¿A qué categoría corresponden las carabinas y pistolas lúdico-deportivas de airsoft y paintball de doble acción (tarjeta A)?","opts":["Categoría 4.1","Categoría 4.2","Categoría 3.3"],"correct":0},{"q":"¿A qué categoría corresponden las carabinas y pistolas de ánima lisa por muelle o resorte de acción simple (airsoft/paintball)?","opts":["Categoría 4.2","Categoría 4.1","Categoría 7.5"],"correct":0},{"q":"¿A qué categoría corresponden las armas blancas no prohibidas?","opts":["Categoría 5.1","Categoría 5.2","Categoría 1"],"correct":0},{"q":"¿A qué categoría corresponden los cuchillos y machetes militares?","opts":["Categoría 5.2","Categoría 5.1","Categoría 6.3"],"correct":0},{"q":"¿A qué categoría corresponden las armas de fuego anteriores al 1 de enero de 1890?","opts":["Categoría 6.2","Categoría 6.1","Categoría 6.4"],"correct":0},{"q":"¿A qué categoría corresponden las armas de avancarga?","opts":["Categoría 6.4","Categoría 6.2","Categoría 6.1"],"correct":0},{"q":"¿A qué categoría corresponden las armas de inyección anestésica?","opts":["Categoría 7.1","Categoría 7.2","Categoría 7.6"],"correct":0},{"q":"¿A qué categoría corresponden las ballestas?","opts":["Categoría 7.2","Categoría 7.1","Categoría 7.5"],"correct":0},{"q":"¿A qué categoría corresponden los lanzacabos?","opts":["Categoría 7.3","Categoría 7.4","Categoría 7.2"],"correct":0},{"q":"¿A qué categoría corresponde el arma Flobert?","opts":["Categoría 7.4","Categoría 7.3","Categoría 6.2"],"correct":0},{"q":"¿A qué categoría corresponden los arcos, la pesca y los fusiles de pesca?","opts":["Categoría 7.5","Categoría 7.6","Categoría 4.2"],"correct":0},{"q":"¿A qué categoría corresponden las armas de alarma y señales?","opts":["Categoría 7.6","Categoría 8.1","Categoría 7.5"],"correct":0},{"q":"¿A qué categoría corresponde el arma acústica y de salvas?","opts":["Categoría 8.1","Categoría 7.6","Categoría 9.1"],"correct":0},{"q":"¿A qué categoría corresponden las armas inutilizadas?","opts":["Categoría 9.1","Categoría 8.1","Categoría 6.1"],"correct":0},{"q":"¿Cuál de las siguientes es una función del Jefe de Seguridad?","opts":["El traslado de armas","La instrucción de expedientes sancionadores","La coordinación con Interpol"],"correct":0},{"q":"¿Cuál de las siguientes es también una función del Jefe de Seguridad?","opts":["Garantizar la colaboración","La emisión de licencias de armas","La expedición de pasaportes"],"correct":0},{"q":"Entre las funciones del Jefe de Seguridad se incluye la de gestionar los servicios de seguridad reglamentaria y también:","opts":["La formación","La instrucción judicial","La gestión del Registro Civil"],"correct":0},{"q":"Dentro de la Comisaría General de Policía Judicial, ¿a qué unidad pertenece la lucha contra el crimen organizado (con Fiscalía adscrita)?","opts":["UDYCO","UDEV","OLA"],"correct":0},{"q":"¿Qué unidad de la Policía Judicial se ocupa de los delitos contra las personas, incluyendo consumidores y dopaje deportivo?","opts":["UDEV","UDYCO","UDEF"],"correct":0},{"q":"¿Qué unidad se ocupa del blanqueo de capitales y la anticorrupción dentro de la Policía Judicial?","opts":["OLA","UDEV","UDYCO"],"correct":0},{"q":"¿Qué unidad se ocupa del fraude, dentro de la Fiscalía de Corrupción y Crimen Organizado?","opts":["UDEF","OLA","UFAM"],"correct":0},{"q":"Dentro de la Comisaría General de Seguridad Ciudadana (CGSC), ¿qué área coordina, entre otros, los asuntos deportivos y taurinos?","opts":["La de Coordinación Operativa","La de Participación Ciudadana","La de Seguridad P.V."],"correct":0},{"q":"¿Qué unidad de la CGSC se encarga de la interlocución en delitos de odio?","opts":["La Interlocución de Delitos de Odio","La UC de Participación Ciudadana","El Interlocutor PN Sanitario"],"correct":0},{"q":"Dentro de la Comisaría General de Policía Científica, ¿qué unidad agrupa EURODAC, identificación facial y biométrica, y personas desaparecidas?","opts":["La U.C. de Identificación","BINCIPOL","BCO"],"correct":0},{"q":"¿Qué unidad de la Policía Científica se ocupa de la Ingeniería y la Tecnología (R.I.)?","opts":["La U.C. de Tecnología y R.I.","BINCIPOL","UCOT"],"correct":0},{"q":"Dentro de la DOTD, ¿qué unidad se relaciona con el Observatorio Tecnológico y el Desarrollo Tecnológico?","opts":["UCAT","UCOT","UPEC"],"correct":0},{"q":"Dentro de la Dirección de Cooperación Internacional (DCI), ¿qué oficina gestiona las extradiciones y traslados internacionales?","opts":["La Oficina Nacional Interpol","La Oficina Sirene","El CENIF"],"correct":0},{"q":"Dentro de la DCI, ¿qué oficina gestiona el intercambio de ADN y huellas (OEDE, \"Post-it\")?","opts":["La Oficina Sirene","La Oficina Nacional Interpol","El CENIF"],"correct":0},{"q":"Dentro del Gabinete Técnico, ¿qué área incluye la Oficina de Protección de Datos?","opts":["El Área Jurídica","El Área de Asuntos Generales","El Área de DDHH e Igualdad"],"correct":0},{"q":"¿Qué área del Gabinete Técnico incluye la Oficina de Igualdad de Género?","opts":["El Área de DDHH e Igualdad","El Área Jurídica","El Área de Coordinación Institucional"],"correct":0},{"q":"¿Qué área del Gabinete Técnico incluye el Servicio de Protocolo (Banda de Música) y la Oficina Marca PN?","opts":["El Área de Coordinación Institucional e Identidad Corporativa","El Área Jurídica","El Área de Asuntos Generales"],"correct":0},{"q":"Dentro de la Comisaría General de Extranjería y Fronteras, ¿qué unidad se ocupa de las redes de inmigración?","opts":["UCRIF","BC. TSH","CENIF"],"correct":0},{"q":"¿Qué unidad de Extranjería y Fronteras se ocupa de las víctimas de trata de seres humanos (TSH)?","opts":["BC. TSH","UCRIF","U.C. de Repatriaciones"],"correct":0},{"q":"¿Qué unidad gestiona los CIE y CATES (Centros de Estancia Temporal)?","opts":["La U.C. de Repatriaciones","La BC. TSH","La UCRIF"],"correct":0},{"q":"¿Qué organismos agrupa el CENIF?","opts":["NFPOC, NCC y Frontex","UCRIF y BC.TSH","Interpol y Sirene"],"correct":0},{"q":"En la Subdirección General de RRHH y Formación, ¿qué se encuentra adscrito a la Secretaría General?","opts":["La Secretaría del Consejo de Policía","El Área de Automoción","El Centro de Idiomas"],"correct":0},{"q":"En la Subdirección General de Logística e Innovación, ¿qué área se encarga de la inhibición de drones?","opts":["El Área de Telecomunicaciones","El Área de Informática","El Área Jurídica"],"correct":0},{"q":"¿Qué área de la Subdirección General de Logística e Innovación alberga el Centro de Protección de Datos?","opts":["El Área de Informática","El Área de Telecomunicaciones","El Área Jurídica"],"correct":0},{"q":"Dentro de la División Económica y Técnica, ¿de qué área dependen la Autoescuela de la DGP y el GOIT?","opts":["Del Área de Automoción","De la Secretaría General","Del Área de Informática"],"correct":0},{"q":"¿De qué unidad depende el Archivo General del Ministerio del Interior, dentro de la División de Documentación?","opts":["Del Área de Tratamiento Documental y Archivo","De la Secretaría General","Del Área de Automoción"],"correct":0},{"q":"En la División de Personal, ¿de qué área depende el Catálogo de Puestos de la CA PN?","opts":["Del Área de Baremación","Del Área de Retribuciones","De la Secretaría General"],"correct":0},{"q":"Dentro de la División de Formación y Perfeccionamiento (DFP), ¿dónde se ubica Iberpol?","opts":["En la Escuela Nacional de Policía (Ávila)","En el Campus Virtual","En el Centro de Idiomas"],"correct":0},{"q":"En el PNPIC (Plan Nacional de Protección de Infraestructuras Críticas), ¿quién lo aprueba?","opts":["La SES","El MIR","El CNPIC"],"correct":0},{"q":"En el PES (Plan Estratégico Sectorial), ¿quién lo aprueba y en qué plazo?","opts":["La Comisión, en 12 meses","La SES, en 6 meses","El CNPIC, en 2 años"],"correct":0},{"q":"En el PSO (Plan de Seguridad del Operador), ¿quién lo elabora y en qué plazo?","opts":["El Operador, en 6 meses","La SES, en 4 meses","La Policía, en 2 años"],"correct":0},{"q":"En el PPE (Plan de Protección Específico), ¿quién lo elabora y en qué plazo?","opts":["El Órgano Competente (OC), en 4 meses","El Operador, en 6 meses","La Policía, sin plazo"],"correct":0},{"q":"En el PAO (Plan de Apoyo Operativo), ¿quién lo elabora?","opts":["La Policía","El Operador","El Órgano Competente"],"correct":0},{"q":"En las notificaciones Interpol, ¿qué color se utiliza para un peligro inminente y grave para la Seguridad Pública?","opts":["Naranja","Morada","Azul"],"correct":0},{"q":"¿Qué color de notificación Interpol se usa para difundir el modus operandi?","opts":["Morada","Naranja","Azul"],"correct":0},{"q":"¿Qué color de notificación Interpol se usa para conseguir más información de una persona?","opts":["Azul","Naranja","Morada"],"correct":0},{"q":"¿Qué rango tiene el Delegado del Gobierno?","opts":["Rango de Subsecretario","Rango de Subdirector General","Rango de Director General"],"correct":0},{"q":"¿Qué rango tiene el Subdelegado del Gobierno?","opts":["Rango de Subdirector General","Rango de Subsecretario","Rango de Secretario de Estado"],"correct":0},{"q":"¿Qué unidad investiga los delitos contra las personas cometidos mediante nuevas tecnologías?","opts":["La B.I.T. (Brigada Central de Investigación Tecnológica)","La BC Fraude Informático","La BSI"],"correct":0},{"q":"¿Qué unidad se ocupa de los delitos de alta especialización, como el fraude BEC?","opts":["La BSI (BC. Seguridad Informática)","La BC Fraude Informático","La B.I.T."],"correct":0},{"q":"¿Cómo se accede al Régimen del Personal de la DGP?","opts":["Por Concurso-Oposición o por Antigüedad (ascenso interno)","Únicamente por oposición libre","Únicamente por nombramiento directo"],"correct":0},{"q":"¿A quién corresponde el Gabinete de la MIR?","opts":["Al Director General","Al Subdirector General","Al Ministro"],"correct":0},{"q":"¿A quién corresponde el Gabinete de la SES?","opts":["Al Subdirector General","Al Director General","Al Ministro"],"correct":0},{"q":"¿Cada cuánto tiempo se realizan las auditorías del CNP?","opts":["Cada 5 años","Cada 4 años","Cada 2 años"],"correct":0},{"q":"¿Cada cuánto se realizan las \"revisiones de evaluación inicial\" en el CNP?","opts":["Cada 4 años","Cada 5 años","Cada 2 años"],"correct":0},{"q":"¿Qué órgano coordina las relaciones del Ministerio del Interior con el Defensor del Pueblo?","opts":["La SGT","El Gabinete Técnico","La DGP"],"correct":0},{"q":"En el CNP, en la excedencia por cuidado de familiares, ¿cuánto tiempo dura la reserva del puesto?","opts":["2 años","3 años","1 año"],"correct":0},{"q":"En el CNP, en la excedencia por cuidado de familiares, ¿cuánto tiempo dura la reserva de destino?","opts":["3 años","2 años","5 años"],"correct":0},{"q":"¿De qué unidad depende la Oficina de Delitos de Odio dentro de la DGP?","opts":["De la DGCYE","De la SGT","Del Gabinete Técnico"],"correct":0},{"q":"¿Qué órgano de la DGP autoriza los cambios de uniforme entre invierno y verano?","opts":["La DAO","La SGT","El Gabinete Técnico"],"correct":0},{"q":"Las funciones de las CCAA en materia de Policía Judicial, ¿cómo se ejercen?","opts":["En colaboración con las FFCCSS","De forma independiente","Bajo la dirección exclusiva del CGPJ"],"correct":0},{"q":"En caso de ausencia del titular de la DAO, ¿quién asume la suplencia?","opts":["La SDG de RRHH / Logística e Innovación","La SGT","El Gabinete Técnico"],"correct":0},{"q":"¿De qué unidad depende la DAO, que agrupa Seguimiento, Inteligencia y Planificación?","opts":["De la UPEC","De la SGT","De la DGCYE"],"correct":0},{"q":"Según los principios de promoción en la Policía (aspecto social/humano), ¿cuál de los siguientes se aplica?","opts":["La objetividad","La publicidad","La celeridad"],"correct":0},{"q":"Según los principios de provisión de destinos en la Policía, ¿cuál de los siguientes se aplica, a diferencia de la promoción?","opts":["La antigüedad","La objetividad","La publicidad"],"correct":0},{"q":"Según el TREBEP, ¿qué principios rigen el acceso o ingreso a la función pública?","opts":["Igualdad, mérito y capacidad","Publicidad y celeridad","Antigüedad y objetividad"],"correct":0},{"q":"Según el TREBEP, ¿qué principios rigen específicamente la provisión de puestos?","opts":["Publicidad y celeridad","Igualdad, mérito y capacidad","Antigüedad y objetividad"],"correct":0},{"q":"Según el TREBEP, ¿qué principios rigen el personal interino?","opts":["Igualdad, mérito, capacidad, publicidad y celeridad","Solo mérito y capacidad","Solo antigüedad"],"correct":0},{"q":"Según el TREBEP, ¿qué principios rigen el personal laboral temporal?","opts":["Igualdad, mérito, capacidad y celeridad","Solo publicidad y celeridad","Solo antigüedad y mérito"],"correct":0},{"q":"Dentro de la cadena de mando de las FCSE, ¿a quién corresponde el mando superior?","opts":["Al MIR (Ministerio del Interior)","A la SES","Al Delegado del Gobierno"],"correct":0},{"q":"Dentro de la cadena de mando de las FCSE, ¿a quién corresponde el mando ejercido?","opts":["A la SES","Al MIR","A la DGP"],"correct":0},{"q":"Dentro de la cadena de mando de las FCSE, ¿a quién corresponde el mando directo?","opts":["Al Subdelegado/Delegado del Gobierno o a la DGP","Al MIR","A la SES"],"correct":0},{"q":"En la valoración de fuentes de información policial, ¿con qué letras se valora la fiabilidad de la fuente?","opts":["A, B, C, X","1, 2, 3, 4","I, II, III, IV"],"correct":0},{"q":"¿Con qué números se valora la fiabilidad de la información en sí?","opts":["1, 2, 3, 4","A, B, C, X","I, II, III"],"correct":0},{"q":"¿Qué función corresponde a la Escala Superior dentro de las escalas policiales?","opts":["La Dirección","El Mando","La Ejecución"],"correct":0},{"q":"¿Qué función corresponde a la Escala Ejecutiva?","opts":["El Mando","La Dirección","La Supervisión"],"correct":0},{"q":"¿Qué función corresponde a la Escala de Subinspección?","opts":["La Supervisión","La Ejecución","El Mando"],"correct":0},{"q":"¿Qué función corresponde a la Escala Básica?","opts":["La Ejecución","La Dirección","La Supervisión"],"correct":0}];
+
+function shuffleArr(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const QUIZ_SIZE = 20;
+let quizQueue = [];
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+let quizResults = [];
+
+const quizOverlay = document.getElementById('quizOverlay');
+const quizPlayWrap = document.getElementById('quizPlayWrap');
+const quizSummaryWrap = document.getElementById('quizSummaryWrap');
+
+function buildQuizQueue(){
+  const picked = shuffleArr(TEST_BANK).slice(0, QUIZ_SIZE);
+  return picked.map(q => {
+    const optOrder = shuffleArr(q.opts.map((text, i) => ({text, isCorrect: i === q.correct})));
+    return { q: q.q, options: optOrder };
+  });
+}
+
+function startQuiz(){
+  quizQueue = buildQuizQueue();
+  quizIdx = 0;
+  quizScore = 0;
+  quizResults = [];
+  quizPlayWrap.style.display = '';
+  quizSummaryWrap.style.display = 'none';
+  document.getElementById('quizTotalTxt').textContent = quizQueue.length;
+  if(!quizOverlay.classList.contains('open')) lockScroll();
+  quizOverlay.classList.add('open');
+  renderQuizStep();
+}
+
+function renderQuizStep(){
+  quizAnswered = false;
+  const item = quizQueue[quizIdx];
+  document.getElementById('quizIdxTxt').textContent = quizIdx + 1;
+  document.getElementById('quizQnum').textContent = `PREGUNTA ${quizIdx+1} DE ${quizQueue.length}`;
+  document.getElementById('quizQuestion').textContent = item.q;
+  document.getElementById('quizProgressFill').style.width = ((quizIdx)/quizQueue.length*100).toFixed(1) + '%';
+
+  const optsWrap = document.getElementById('quizOptions');
+  optsWrap.innerHTML = '';
+  const letters = ['A','B','C','D'];
+  const fragment = document.createDocumentFragment();
+  item.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.type = 'button';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt.text}</span>`;
+    btn.addEventListener('click', () => selectQuizOption(i), {passive: true});
+    fragment.appendChild(btn);
+  });
+  optsWrap.appendChild(fragment);
+
+  const fb = document.getElementById('quizFeedback');
+  fb.className = 'quiz-feedback';
+  fb.textContent = '';
+
+  const nextBtn = document.getElementById('quizNextBtn');
+  nextBtn.classList.remove('enabled');
+  nextBtn.textContent = (quizIdx === quizQueue.length - 1) ? 'Ver resultados →' : 'Siguiente →';
+}
+
+function selectQuizOption(i){
+  if(quizAnswered) return;
+  quizAnswered = true;
+  const item = quizQueue[quizIdx];
+  const chosen = item.options[i];
+  const correctIdx = item.options.findIndex(o => o.isCorrect);
+  const opts = document.querySelectorAll('#quizOptions .quiz-opt');
+  opts.forEach((el, idx) => {
+    el.classList.add('disabled');
+    if(idx === correctIdx) el.classList.add('correct');
+    else if(idx === i) el.classList.add('incorrect');
+  });
+
+  const fb = document.getElementById('quizFeedback');
+  haptic(chosen.isCorrect ? 15 : [10, 50, 10]);
+  if(chosen.isCorrect){
+    quizScore++;
+    fb.className = 'quiz-feedback show ok';
+    fb.textContent = '✓ Correcto.';
+  } else {
+    fb.className = 'quiz-feedback show ko';
+    fb.textContent = `✗ Incorrecto. La respuesta correcta es: ${item.options[correctIdx].text}`;
+  }
+  quizResults.push({q: item.q, ok: chosen.isCorrect, correctText: item.options[correctIdx].text});
+
+  document.getElementById('quizNextBtn').classList.add('enabled');
+}
+
+function quizNext(){
+  if(!quizAnswered) return;
+  if(quizIdx < quizQueue.length - 1){
+    quizIdx++;
+    renderQuizStep();
+  } else {
+    document.getElementById('quizProgressFill').style.width = '100%';
+    showQuizSummary();
+  }
+}
+
+function showQuizSummary(){
+  quizPlayWrap.style.display = 'none';
+  quizSummaryWrap.style.display = '';
+  const pct = Math.round((quizScore / quizQueue.length) * 100);
+  const reviewHtml = quizResults.map(r => `
+    <div class="qrl-item ${r.ok ? 'ok' : ''}">
+      <b>${r.ok ? '✓' : '✗'} ${r.q}</b>
+      ${r.ok ? '' : `Correcta: ${r.correctText}`}
+    </div>
+  `).join('');
+  quizSummaryWrap.innerHTML = `
+    <div class="quiz-summary">
+      <h2>Test completado</h2>
+      <div class="qs-sub">${quizScore} de ${quizQueue.length} respuestas correctas</div>
+      <div class="quiz-score-ring" style="--pct:${pct}">
+        <div class="quiz-score-num">${pct}%<small>acierto</small></div>
+      </div>
+      <div class="quiz-summary-actions">
+        <button class="qs-retry" id="quizRetryBtn">🔄 Nuevo test (20 preguntas)</button>
+        <button class="qs-close" id="quizCloseBtn">Cerrar</button>
+      </div>
+      <div class="quiz-review-list">${reviewHtml}</div>
+    </div>
+  `;
+  document.getElementById('quizRetryBtn').onclick = startQuiz;
+  document.getElementById('quizCloseBtn').onclick = closeQuiz;
+}
+
+function closeQuiz(){
+  if(quizOverlay.classList.contains('open')) unlockScroll();
+  quizOverlay.classList.remove('open');
+}
+
+document.getElementById('btnStartQuiz').onclick = startQuiz;
+document.getElementById('quizExit').onclick = closeQuiz;
+document.getElementById('quizNextBtn').onclick = quizNext;
+
+document.addEventListener('keydown', e => {
+  if(!quizOverlay.classList.contains('open')) return;
+  e.preventDefault?.();
+  
+  if(e.key === 'Escape'){ closeQuiz(); return; }
+  if(quizSummaryWrap.style.display !== 'none') return;
+  
+  const key = e.key.toLowerCase();
+  if(key === 'enter' && quizAnswered){ 
+    quizNext(); 
+  }
+  else if(['1','2','3','4'].includes(key) && !quizAnswered){
+    const idx = parseInt(key) - 1;
+    const opts = document.querySelectorAll('#quizOptions .quiz-opt');
+    if(opts[idx]) opts[idx].click();
+  }
+}, { passive: false, capture: true });
+
+
+</script></body></html>
